@@ -1,0 +1,67 @@
+{
+    "name": "aerni/image-generator",
+    "description": "Generate images of your entries",
+    "keywords": [
+        "statamic"
+    ],
+    "homepage": "https://github.com/aerni/statamic-image-generator",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Michael Aerni",
+            "email": "hello@michaelaerni.ch",
+            "homepage": "https://michaelaerni.ch",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "laravel/framework": "^9.0",
+        "spatie/browsershot": "^3.57",
+        "spatie/laravel-ray": "^1.32",
+        "statamic/cms": "~3.4.0"
+    },
+    "require-dev": {
+        "nunomaduro/collision": "^6.1",
+        "orchestra/testbench": "7.1",
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aerni\\ImageGenerator\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Aerni\\ImageGenerator\\Tests\\": "tests"
+        },
+        "classmap": [
+            "tests/TestCase.php"
+        ]
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pixelfear/composer-dist-plugin": true
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Image Generator",
+            "description": "Generate images of your entries"
+        },
+        "laravel": {
+            "providers": [
+                "Aerni\\ImageGenerator\\ServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
