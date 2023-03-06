@@ -24,6 +24,8 @@ class Template
 
     public function view(): string
     {
-        return Str::after($this->file->getPathname(), 'views/');
+        $viewPath = Str::after($this->file->getPathname(), 'views/');
+
+        return Str::remove('.antlers.html', $viewPath);
     }
 }

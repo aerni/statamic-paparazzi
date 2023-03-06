@@ -2,14 +2,23 @@
 
 namespace Aerni\Paparazzi;
 
-use Statamic\Facades\URL;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Statamic\Facades\URL;
 
 class Paparazzi
 {
-    public function make(Model $model): Image
+    public function models(array $select = []): Collection
     {
-        return Image::make($model);
+        $select = collect($select)->map(fn ($model) => Str::snake($model));
+
+        return collect(config('paparazzi.models'))
+            ->when(
+                $select->isNotEmpty(),
+                fn ($models) => $models->only($select)
+            )
+            ->map(fn ($model, $id) => new Model($id, $model))
+            ->values();
     }
 
     public function model(string $id): ?Model
@@ -33,8 +42,6 @@ class Paparazzi
 
     public function __call(string $method, array $arguments)
     {
-        if ($model = $this->model($method)) {
-            return $this->make($model)->with($arguments[0]);
-        }
+        return $this->model($method)->content($arguments[0] ?? []);
     }
 }

@@ -2,26 +2,25 @@
 
 namespace Aerni\Paparazzi\Jobs;
 
-use Aerni\Paparazzi\Facades\Image;
 use Illuminate\Bus\Queueable;
+use Aerni\Paparazzi\Generator;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Statamic\Contracts\Entries\Entry;
 
-class GenerateImagesJob implements ShouldQueue
+class GenerateAssetJob implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
     use Queueable;
 
-    public function __construct(protected Entry $entry)
+    public function __construct(protected Generator $generator)
     {
         $this->queue = config('paparazzi.queue', 'default');
     }
 
-    public function handle(): void
+    public function handle()
     {
-        Image::all($this->entry)->each->generate();
+        $this->generator->generate();
     }
 }

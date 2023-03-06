@@ -2,21 +2,31 @@
 
 namespace Aerni\Paparazzi;
 
+use Aerni\Paparazzi\Concerns\HasAsset;
+use Aerni\Paparazzi\Facades\Paparazzi;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-use Statamic\Facades\AssetContainer;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Statamic\Contracts\Assets\AssetContainer as Container;
+use Statamic\Contracts\Data\Augmentable;
+use Statamic\Contracts\Entries\Entry;
+use Statamic\Contracts\Taxonomies\Term;
+use Statamic\Facades\AssetContainer;
 
 class Model
 {
+    use HasAsset;
+
     protected int $width;
     protected int $height;
     protected string $extension;
     protected int $quality;
     protected string $container;
     protected string $directory;
+    protected string $layout;
     protected string $template;
+    protected Collection $content;
 
     public function __construct(protected string $id, array $config)
     {
@@ -30,7 +40,9 @@ class Model
         $this->quality = config('paparazzi.defaults.quality', 100);
         $this->container = config('paparazzi.defaults.container', 'assets');
         $this->directory = config('paparazzi.defaults.directory', '/');
+        $this->layout = config('paparazzi.defaults.layout', 'layout');
         $this->template = config('paparazzi.defaults.template', 'default');
+        $this->content = collect();
     }
 
     public function setConfig(array $config): self
@@ -38,10 +50,11 @@ class Model
         Validator::make($config, [
             'width' => 'required|integer',
             'height' => 'required|integer',
-            'extension' => 'string',
+            'extension' => 'string|in:png,jpeg,pdf',
             'quality' => 'integer',
             'container' => 'string',
             'directory' => 'string',
+            'layout' => 'string',
             'template' => 'string',
         ])->validate();
 
@@ -93,6 +106,10 @@ class Model
             return $this->extension;
         }
 
+        Validator::make(['extension' => $extension], [
+            'extension' => 'in:png,jpeg,pdf',
+        ])->validate();
+
         $this->extension = $extension;
 
         return $this;
@@ -131,13 +148,45 @@ class Model
         return $this;
     }
 
+    public function layout(string $layout = null): string|self
+    {
+        if (! $layout) {
+            $layout = collect(File::files(config('paparazzi.views')))
+                ->firstWhere(fn ($file) => $file->getBasename('.antlers.html') === $this->layout);
+
+            // TODO: Log exception if layout doesn't exist.
+
+            $viewPath = Str::after($layout, 'views/');
+
+            return Str::remove('.antlers.html', $viewPath);
+        }
+
+        $this->layout = $layout;
+
+        return $this;
+    }
+
     public function template(string $template = null): Template|self
     {
         if (! $template) {
+            // TODO: Log exception if template doesn't exist.
             return $this->templates()->firstWhere(fn ($template) => $template->id() === $this->template);
         }
 
         $this->template = $template;
+
+        return $this;
+    }
+
+    public function content(Entry|Term|Collection|array $content = null): Collection|self
+    {
+        if (is_null($content)) {
+            return $this->content;
+        }
+
+        $this->content = $content instanceof Augmentable
+            ? $content->toAugmentedCollection()
+            : collect($content);
 
         return $this;
     }
@@ -147,5 +196,34 @@ class Model
         return collect(File::allFiles(config('paparazzi.views')))
             ->filter(fn ($file) => $file->getRelativePath() === $this->id)
             ->map(fn ($file) => new Template($file));
+    }
+
+    public function url(): string
+    {
+        $parameters = strtr(Paparazzi::route(), [
+            'model' => $this->id(),
+            'template' => $this->template()->id(),
+            'contentId' => $this->content()->get('id'),
+        ]);
+
+        return Str::of($parameters)
+            ->remove(['{', '}'])
+            ->replace('_', '-')
+            ->prepend(url('/'));
+    }
+
+    public function generate(): Generator
+    {
+        return $this->generator()->generate();
+    }
+
+    public function dispatch(): Generator
+    {
+        return $this->generator()->dispatch();
+    }
+
+    public function generator(): Generator
+    {
+        return new Generator($this);
     }
 }
