@@ -1,8 +1,8 @@
 <?php
 
-namespace Aerni\ImageGenerator\Jobs;
+namespace Aerni\Paparazzi\Jobs;
 
-use Aerni\ImageGenerator\Facades\Image;
+use Aerni\Paparazzi\Facades\Image;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -17,7 +17,7 @@ class GenerateImagesJob implements ShouldQueue
 
     public function __construct(protected Entry $entry)
     {
-        $this->queue = config('image-generator.queue', 'default');
+        $this->queue = config('paparazzi.queue', 'default');
     }
 
     public function handle(): void

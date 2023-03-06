@@ -1,6 +1,6 @@
 <?php
 
-namespace Aerni\ImageGenerator\Http\Controllers\Web;
+namespace Aerni\Paparazzi\Http\Controllers\Web;
 
 use Aerni\AdvancedSeo\Facades\SocialImage;
 use Facades\Statamic\CP\LivePreview;

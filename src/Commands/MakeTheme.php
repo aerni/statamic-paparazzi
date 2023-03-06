@@ -1,6 +1,6 @@
 <?php
 
-namespace Aerni\ImageGenerator\Commands;
+namespace Aerni\Paparazzi\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -21,7 +21,7 @@ class MakeTheme extends Command
 
     protected function publishLayout(): void
     {
-        $source = __DIR__ . '/../../resources/stubs/social_images/';
+        $source = __DIR__.'/../../resources/stubs/social_images/';
         $target = resource_path('views/social_images/');
         $layout = 'layout.antlers.html';
 
@@ -36,8 +36,8 @@ class MakeTheme extends Command
     {
         $theme = $this->argument('name') ?? $this->ask('What do you want to call the theme?', 'default');
 
-        $source = __DIR__ . '/../../resources/stubs/social_images/templates';
-        $target = resource_path('views/social_images/' . $theme);
+        $source = __DIR__.'/../../resources/stubs/social_images/templates';
+        $target = resource_path('views/social_images/'.$theme);
 
         if (! File::exists($target) || $this->confirm("A theme with the name <comment>$theme</comment> already exists. Do you want to overwrite it?")) {
             File::ensureDirectoryExists($target);
@@ -48,6 +48,6 @@ class MakeTheme extends Command
 
     protected function getRelativePath($path): string
     {
-        return str_replace(base_path() . '/', '', $path);
+        return str_replace(base_path().'/', '', $path);
     }
 }

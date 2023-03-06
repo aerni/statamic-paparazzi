@@ -1,10 +1,10 @@
 {
-    "name": "aerni/image-generator",
+    "name": "aerni/paparazzi",
     "description": "Generate images of your entries",
     "keywords": [
         "statamic"
     ],
-    "homepage": "https://github.com/aerni/statamic-image-generator",
+    "homepage": "https://github.com/aerni/statamic-paparazzi",
     "license": "proprietary",
     "authors": [
         {
@@ -28,12 +28,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Aerni\\ImageGenerator\\": "src"
+            "Aerni\\Paparazzi\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Aerni\\ImageGenerator\\Tests\\": "tests"
+            "Aerni\\Paparazzi\\Tests\\": "tests"
         },
         "classmap": [
             "tests/TestCase.php"
@@ -53,12 +53,12 @@
     },
     "extra": {
         "statamic": {
-            "name": "Image Generator",
+            "name": "Paparazzi",
             "description": "Generate images of your entries"
         },
         "laravel": {
             "providers": [
-                "Aerni\\ImageGenerator\\ServiceProvider"
+                "Aerni\\Paparazzi\\ServiceProvider"
             ]
         }
     },

@@ -1,6 +1,6 @@
 <?php
 
-namespace Aerni\ImageGenerator;
+namespace Aerni\Paparazzi;
 
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
@@ -13,7 +13,7 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $routes = [
-        'actions' => __DIR__.'/../routes/actions.php',
+        'web' => __DIR__.'/../routes/web.php',
     ];
 
     public function bootAddon(): void
@@ -25,7 +25,7 @@ class ServiceProvider extends AddonServiceProvider
     {
         Statamic::afterInstalled(function ($command) {
             $command->call('vendor:publish', [
-                '--tag' => 'image-generator-config',
+                '--tag' => 'paparazzi-config',
             ]);
         });
 

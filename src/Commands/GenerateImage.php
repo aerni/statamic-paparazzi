@@ -1,6 +1,6 @@
 <?php
 
-namespace Aerni\ImageGenerator\Commands;
+namespace Aerni\Paparazzi\Commands;
 
 use Aerni\AdvancedSeo\Actions\GetDefaultsData;
 use Aerni\AdvancedSeo\Features\SocialImagesGenerator;
