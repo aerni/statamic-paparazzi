@@ -18,58 +18,19 @@ class Model
 {
     use HasAsset;
 
-    protected int $width;
-    protected int $height;
-    protected string $extension;
-    protected int $quality;
-    protected string $container;
-    protected string $directory;
-    protected string $layout;
-    protected string $template;
+    protected string $id;
+    protected Config $config;
     protected Collection $content;
 
-    public function __construct(protected string $id, array $config)
+    public function __construct(string $id, array $config)
     {
-        $this->initDefaultConfig();
-        $this->setConfig($config);
-    }
-
-    protected function initDefaultConfig(): void
-    {
-        $this->extension = config('paparazzi.defaults.extension', 'png');
-        $this->quality = config('paparazzi.defaults.quality', 100);
-        $this->container = config('paparazzi.defaults.container', 'assets');
-        $this->directory = config('paparazzi.defaults.directory', '/');
-        $this->layout = config('paparazzi.defaults.layout', 'layout');
-        $this->template = config('paparazzi.defaults.template', 'default');
-        $this->content = collect();
-    }
-
-    public function setConfig(array $config): self
-    {
-        Validator::make($config, [
-            'width' => 'required|integer',
-            'height' => 'required|integer',
-            'extension' => 'string|in:png,jpeg,pdf',
-            'quality' => 'integer',
-            'container' => 'string',
-            'directory' => 'string',
-            'layout' => 'string',
-            'template' => 'string',
-        ])->validate();
-
-        foreach ($config as $key => $value) {
-            if (property_exists($this, $key)) {
-                $this->$key = $value;
-            }
-        }
-
-        return $this;
+        $this->id = $id;
+        $this->config = new Config($config);
     }
 
     public function id(string $id = null): string|self
     {
-        if (! $id) {
+        if (is_null($id)) {
             return $this->id;
         }
 
@@ -80,79 +41,75 @@ class Model
 
     public function width(int $width = null): int|self
     {
-        if (! $width) {
-            return $this->width;
+        if (is_null($width)) {
+            return $this->config->width();
         }
 
-        $this->width = $width;
+        $this->config->width($width);
 
         return $this;
     }
 
     public function height(int $height = null): int|self
     {
-        if (! $height) {
-            return $this->height;
+        if (is_null($height)) {
+            return $this->config->height();
         }
 
-        $this->height = $height;
+        $this->config->height($height);
 
         return $this;
     }
 
     public function extension(string $extension = null): string|self
     {
-        if (! $extension) {
-            return $this->extension;
+        if (is_null($extension)) {
+            return $this->config->extension();
         }
 
-        Validator::make(['extension' => $extension], [
-            'extension' => 'in:png,jpeg,pdf',
-        ])->validate();
-
-        $this->extension = $extension;
+        $this->config->extension($extension);
 
         return $this;
     }
 
     public function quality(int $quality = null): int|self
     {
-        if (! $quality) {
-            return $this->quality;
+        if (is_null($quality)) {
+            return $this->config->quality();
         }
 
-        $this->quality = $quality;
+        $this->config->quality($quality);
 
         return $this;
     }
 
     public function container(string $container = null): Container|self
     {
-        if (! $container) {
-            return AssetContainer::find($this->container);
+        if (is_null($container)) {
+            return AssetContainer::find($this->config->container());
         }
 
-        $this->container = $container;
+        $this->config->container($container);
 
         return $this;
     }
 
     public function directory(string $directory = null): string|self
     {
-        if (! $directory) {
-            return $this->directory;
+        if (is_null($directory)) {
+            return $this->config->directory();
         }
 
-        $this->directory = $directory;
+        $this->config->directory($directory);
 
         return $this;
     }
 
     public function layout(string $layout = null): string|self
     {
-        if (! $layout) {
+        if (is_null($layout)) {
             $layout = collect(File::files(config('paparazzi.views')))
-                ->firstWhere(fn ($file) => $file->getBasename('.antlers.html') === $this->layout);
+                ->firstWhere(fn ($file) => $file->getBasename('.antlers.html') === $this->config->layout());
 
             // TODO: Log exception if layout doesn't exist.
 
@@ -161,19 +118,19 @@ class Model
             return Str::remove('.antlers.html', $viewPath);
         }
 
-        $this->layout = $layout;
+        $this->config->layout($layout);
 
         return $this;
     }
 
     public function template(string $template = null): Template|self
     {
-        if (! $template) {
+        if (is_null($template)) {
             // TODO: Log exception if template doesn't exist.
-            return $this->templates()->firstWhere(fn ($template) => $template->id() === $this->template);
+            return $this->templates()->firstWhere(fn ($template) => $template->id() === $this->config->template());
         }
 
-        $this->template = $template;
+        $this->config->template($template);
 
         return $this;
     }

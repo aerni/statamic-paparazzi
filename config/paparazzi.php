@@ -17,7 +17,7 @@ return [
             'width' => 1080,
             'height' => 1080,
             // 'layout' => 'defaault',
-            // 'template' => 'default',
+            // 'template' => 'asdasd',
             'extension' => 'jpeg',
             'quality' => 80,
             // 'container' => 'a',
