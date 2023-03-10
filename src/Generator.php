@@ -11,31 +11,16 @@ use Aerni\Paparazzi\Jobs\GenerateAssetJob;
 class Generator
 {
     protected Browsershot $browsershot;
+    protected $callbacks = [];
 
     public function __construct(protected Model $model)
     {
-        $this->initBrowsershot();
+        $this->browsershot = new Browsershot();
     }
 
-    protected function initBrowsershot(): void
+    public function browsershot(Closure $callback): Browsershot|self
     {
-        // Quality is only supported for jpeg.
-        $quality = $this->model->extension() === 'jpeg'
-            ? $this->model->quality() : null;
-
-        $this->browsershot = (new Browsershot())
-            ->html($this->view()->render())
-            ->windowSize($this->model->width(), $this->model->height())
-            ->setScreenshotType($this->model->extension(), $quality);
-    }
-
-    public function browsershot(Closure $callback = null): Browsershot|self
-    {
-        if (! $callback) {
-            return $this->browsershot;
-        }
-
-        $this->browsershot = $callback($this->browsershot);
+        $this->callbacks[] = $callback;
 
         return $this;
     }
@@ -44,8 +29,20 @@ class Generator
     {
         $this->ensureDirectoryExists();
 
-        $this->browsershot()
-            ->save($this->model->absolutePath());
+        // Quality is only supported for jpeg.
+        $quality = $this->model->extension() === 'jpeg'
+            ? $this->model->quality() : null;
+
+        $browsershot = $this->browsershot
+            ->html($this->view()->render())
+            ->windowSize($this->model->width(), $this->model->height())
+            ->setScreenshotType($this->model->extension(), $quality);
+
+        foreach ($this->callbacks as $callback) {
+            $callback($browsershot);
+        }
+
+        $browsershot->save($this->model->absolutePath());
 
         $this->model->container()
             ->makeAsset($this->model->path())
