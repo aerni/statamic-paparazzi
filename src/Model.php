@@ -6,7 +6,6 @@ use Aerni\Paparazzi\Concerns\HasAsset;
 use Aerni\Paparazzi\Facades\Paparazzi;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Statamic\Contracts\Assets\AssetContainer as Container;
 use Statamic\Contracts\Data\Augmentable;
@@ -18,14 +17,11 @@ class Model
 {
     use HasAsset;
 
-    protected string $id;
-    protected Config $config;
     protected Collection $content;
 
-    public function __construct(string $id, array $config)
+    public function __construct(protected string $id, protected Config $config)
     {
-        $this->id = $id;
-        $this->config = new Config($config);
+        $this->content = collect();
     }
 
     public function id(string $id = null): string|self
