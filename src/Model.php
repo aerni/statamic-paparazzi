@@ -2,16 +2,17 @@
 
 namespace Aerni\Paparazzi;
 
+use Closure;
 use Illuminate\Support\Str;
 use Aerni\Paparazzi\Template;
 use Illuminate\Support\Collection;
-use Aerni\Paparazzi\Facades\Layout as LayoutApi;
 use Statamic\Facades\AssetContainer;
 use Statamic\Contracts\Entries\Entry;
 use Aerni\Paparazzi\Concerns\HasAsset;
 use Aerni\Paparazzi\Facades\Paparazzi;
 use Statamic\Contracts\Taxonomies\Term;
 use Statamic\Contracts\Data\Augmentable;
+use Aerni\Paparazzi\Facades\Layout as LayoutApi;
 use Aerni\Paparazzi\Facades\Template as TemplateApi;
 use Statamic\Contracts\Assets\AssetContainer as Container;
 
@@ -161,14 +162,26 @@ class Model
             ->prepend(url('/'));
     }
 
-    public function generate(): Generator
+    public function generate(Closure $callback = null): Generator
     {
-        return $this->generator()->generate();
+        $generator = $this->generator();
+
+        if ($callback) {
+            $generator->browsershot($callback);
+        }
+
+        return $generator->generate();
     }
 
-    public function dispatch(): Generator
+    public function dispatch(Closure $callback = null): Generator
     {
-        return $this->generator()->dispatch();
+        $generator = $this->generator();
+
+        if ($callback) {
+            $generator->browsershot($callback);
+        }
+
+        return $generator->dispatch();
     }
 
     public function generator(): Generator
