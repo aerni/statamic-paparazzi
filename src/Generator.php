@@ -11,16 +11,34 @@ use Aerni\Paparazzi\Jobs\GenerateAssetJob;
 class Generator
 {
     protected Browsershot $browsershot;
-    protected $callbacks = [];
+    protected $callback;
 
     public function __construct(protected Model $model)
     {
-        $this->browsershot = new Browsershot();
+        //
     }
 
     public function browsershot(Closure $callback): Browsershot|self
     {
-        $this->callbacks[] = $callback;
+        $this->callback = $callback;
+
+        return $this;
+    }
+
+    protected function hydrateBrowsershot(): self
+    {
+        // Quality is only supported for jpeg.
+        $quality = $this->model->extension() === 'jpeg'
+            ? $this->model->quality() : null;
+
+        $this->browsershot = (new Browsershot())
+            ->html($this->view()->render())
+            ->windowSize($this->model->width(), $this->model->height())
+            ->setScreenshotType($this->model->extension(), $quality);
+
+        if ($this->callback) {
+            call_user_func($this->callback, $this->browsershot);
+        }
 
         return $this;
     }
@@ -29,20 +47,16 @@ class Generator
     {
         $this->ensureDirectoryExists();
 
-        // Quality is only supported for jpeg.
-        $quality = $this->model->extension() === 'jpeg'
-            ? $this->model->quality() : null;
-
-        $browsershot = $this->browsershot
-            ->html($this->view()->render())
-            ->windowSize($this->model->width(), $this->model->height())
-            ->setScreenshotType($this->model->extension(), $quality);
-
-        foreach ($this->callbacks as $callback) {
-            $callback($browsershot);
+        /**
+         * Only hydrate browserhot if it hasn't already happened.
+         * We don't want to override previously hydrated browsershot settings,
+         * which is the case when this method is called from a dispatched job.
+         */
+        if (! isset($this->browsershot)) {
+            $this->hydrateBrowsershot();
         }
 
-        $browsershot->save($this->model->absolutePath());
+        $this->browsershot->save($this->model->absolutePath());
 
         $this->model->container()
             ->makeAsset($this->model->path())
@@ -53,12 +67,15 @@ class Generator
 
     public function dispatch(): self
     {
+        $this->hydrateBrowsershot(); // Hydrate browsershot with the callbacks
+        unset($this->callback); // Remove the callbacks to avoid closure serialization exception
+
         GenerateAssetJob::dispatch($this);
 
         return $this;
     }
 
-    public function view(): View
+    protected function view(): View
     {
         return (new View)
             ->layout($this->model->layout()->view())
