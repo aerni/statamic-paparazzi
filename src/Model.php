@@ -19,10 +19,12 @@ class Model
 {
     use HasAsset;
 
+    protected Config $config;
     protected Collection $content;
 
-    public function __construct(protected string $id, protected Config $config)
+    public function __construct(protected string $id, array $config)
     {
+        $this->config = new Config($config);
         $this->content = collect();
     }
 

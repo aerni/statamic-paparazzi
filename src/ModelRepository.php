@@ -37,6 +37,6 @@ class ModelRepository
 
     protected function resolve(string $id, array $config): Model
     {
-        return new Model($id, new Config($config));
+        return new Model($id, $config);
     }
 }
