@@ -19,7 +19,7 @@ class Template
 
     public function name(): string
     {
-        return Str::slugToTitle($this->id());
+        return Str::slugToTitle($this->file->getBasename('.antlers.html'));
     }
 
     public function model(): string
