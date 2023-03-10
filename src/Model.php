@@ -5,7 +5,7 @@ namespace Aerni\Paparazzi;
 use Illuminate\Support\Str;
 use Aerni\Paparazzi\Template;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\File;
+use Aerni\Paparazzi\Facades\Layout as LayoutApi;
 use Statamic\Facades\AssetContainer;
 use Statamic\Contracts\Entries\Entry;
 use Aerni\Paparazzi\Concerns\HasAsset;
@@ -103,17 +103,11 @@ class Model
         return $this;
     }
 
-    public function layout(string $layout = null): string|self
+    public function layout(string $layout = null): Layout|self
     {
         if (is_null($layout)) {
-            $layout = collect(File::files(config('paparazzi.views')))
-                ->firstWhere(fn ($file) => $file->getBasename('.antlers.html') === $this->config->layout());
-
             // TODO: Log exception if layout doesn't exist.
-
-            $viewPath = Str::after($layout, 'views/');
-
-            return Str::remove('.antlers.html', $viewPath);
+            return LayoutApi::find($this->config->layout());
         }
 
         $this->config->layout($layout);

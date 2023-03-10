@@ -64,7 +64,7 @@ class Generator
     public function view(): View
     {
         return (new View)
-            ->layout($this->model->layout())
+            ->layout($this->model->layout()->view())
             ->template($this->model->template()->view())
             ->with($this->model->content()->toArray());
     }

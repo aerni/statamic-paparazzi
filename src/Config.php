@@ -27,7 +27,7 @@ class Config
             'quality' => config('paparazzi.defaults.quality', 100),
             'container' => config('paparazzi.defaults.container', 'assets'),
             'directory' => config('paparazzi.defaults.directory', '/'),
-            'layout' => config('paparazzi.defaults.layout', 'layout'),
+            'layout' => config('paparazzi.defaults.layout', 'default'),
             'template' => config('paparazzi.defaults.template', 'default'),
         ], $config);
 
