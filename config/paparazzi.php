@@ -13,35 +13,19 @@ return [
 
     'models' => [
 
-        'instagram_post' => [
-            'width' => 1080,
-            'height' => 1080,
-            // 'layout' => 'defaault',
-            // 'template' => 'asdasd',
-            'extension' => 'jpeg',
-            'quality' => 80,
-            // 'container' => 'a',
-            // 'directory' => '/instagram',
-        ],
-
-        'instagram_story' => [
-            'width' => 1080,
-            'height' => 1920,
-        ],
-
         'open_graph' => [
             'width' => 1200,
-            'height' => 628,
+            'height' => 630,
         ],
 
-        'twitter_summary' => [
+        'twitter' => [
             'width' => 240,
             'height' => 240,
         ],
 
-        'twitter_summary_large_image' => [
+        'twitter_large' => [
             'width' => 1200,
-            'height' => 628,
+            'height' => 630,
         ],
 
     ],
@@ -96,7 +80,7 @@ return [
         | Quality
         |--------------------------------------------------------------------------
         |
-        | The quality of the generated images.
+        | The quality of the generated images. This only applies when using `jpeg` as extension.
         |
         */
 
