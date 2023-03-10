@@ -14,12 +14,17 @@ class Template
 
     public function id(): string
     {
-        return $this->file->getBasename('.antlers.html');
+        return "{$this->model()}::{$this->file->getBasename('.antlers.html')}";
     }
 
     public function name(): string
     {
         return Str::slugToTitle($this->id());
+    }
+
+    public function model(): string
+    {
+        return $this->file->getRelativePath();
     }
 
     public function view(): string

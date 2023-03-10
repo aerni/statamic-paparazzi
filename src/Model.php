@@ -2,16 +2,18 @@
 
 namespace Aerni\Paparazzi;
 
-use Aerni\Paparazzi\Concerns\HasAsset;
-use Aerni\Paparazzi\Facades\Paparazzi;
+use Illuminate\Support\Str;
+use Aerni\Paparazzi\Template;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
-use Statamic\Contracts\Assets\AssetContainer as Container;
-use Statamic\Contracts\Data\Augmentable;
-use Statamic\Contracts\Entries\Entry;
-use Statamic\Contracts\Taxonomies\Term;
 use Statamic\Facades\AssetContainer;
+use Statamic\Contracts\Entries\Entry;
+use Aerni\Paparazzi\Concerns\HasAsset;
+use Aerni\Paparazzi\Facades\Paparazzi;
+use Statamic\Contracts\Taxonomies\Term;
+use Statamic\Contracts\Data\Augmentable;
+use Aerni\Paparazzi\Facades\Template as TemplateApi;
+use Statamic\Contracts\Assets\AssetContainer as Container;
 
 class Model
 {
@@ -123,7 +125,7 @@ class Model
     {
         if (is_null($template)) {
             // TODO: Log exception if template doesn't exist.
-            return $this->templates()->firstWhere(fn ($template) => $template->id() === $this->config->template());
+            return TemplateApi::find("{$this->id()}::{$this->config->template()}");
         }
 
         $this->config->template($template);
@@ -146,9 +148,7 @@ class Model
 
     public function templates(): Collection
     {
-        return collect(File::allFiles(config('paparazzi.views')))
-            ->filter(fn ($file) => $file->getRelativePath() === $this->id)
-            ->map(fn ($file) => new Template($file));
+        return TemplateApi::allOfModel($this->id);
     }
 
     public function url(): string
