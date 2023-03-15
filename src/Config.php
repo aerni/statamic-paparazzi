@@ -12,6 +12,7 @@ class Config
     protected int $quality;
     protected string $container;
     protected string $directory;
+    protected bool $replace;
     protected string $layout;
     protected string $template;
 
@@ -27,6 +28,7 @@ class Config
             'quality' => config('paparazzi.defaults.quality', 100),
             'container' => config('paparazzi.defaults.container', 'assets'),
             'directory' => config('paparazzi.defaults.directory', '/'),
+            'replace' => config('paparazzi.defaults.replace', true),
             'layout' => config('paparazzi.defaults.layout', 'default'),
             'template' => config('paparazzi.defaults.template', 'default'),
         ], $config);
@@ -47,6 +49,7 @@ class Config
             'quality' => 'integer',
             'container' => 'string',
             'directory' => 'string',
+            'replace' => 'bool',
             'layout' => 'string',
             'template' => 'string',
         ];

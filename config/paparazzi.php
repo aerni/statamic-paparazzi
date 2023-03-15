@@ -108,6 +108,18 @@ return [
 
         'directory' => '/',
 
+        /*
+        |--------------------------------------------------------------------------
+        | Replace Latest Asset
+        |--------------------------------------------------------------------------
+        |
+        | Every time an image is generated, it will replace the previously generated image.
+        | You may keep all images by setting this to `false`.
+        |
+        */
+
+        'replace' => false,
+
     ],
 
     /*

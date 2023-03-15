@@ -2,19 +2,18 @@
 
 namespace Aerni\Paparazzi;
 
-use Closure;
-use Illuminate\Support\Str;
-use Aerni\Paparazzi\Template;
-use Illuminate\Support\Collection;
-use Statamic\Facades\AssetContainer;
-use Statamic\Contracts\Entries\Entry;
 use Aerni\Paparazzi\Concerns\HasAsset;
-use Aerni\Paparazzi\Facades\Paparazzi;
-use Statamic\Contracts\Taxonomies\Term;
-use Statamic\Contracts\Data\Augmentable;
 use Aerni\Paparazzi\Facades\Layout as LayoutApi;
+use Aerni\Paparazzi\Facades\Paparazzi;
 use Aerni\Paparazzi\Facades\Template as TemplateApi;
+use Closure;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Statamic\Contracts\Assets\AssetContainer as Container;
+use Statamic\Contracts\Data\Augmentable;
+use Statamic\Contracts\Entries\Entry;
+use Statamic\Contracts\Taxonomies\Term;
+use Statamic\Facades\AssetContainer;
 
 class Model
 {
@@ -22,11 +21,27 @@ class Model
 
     protected Config $config;
     protected Collection $content;
+    protected int $uid;
 
     public function __construct(protected string $id, array $config)
     {
         $this->config = new Config($config);
         $this->content = collect();
+        $this->uid = time();
+    }
+
+    public function reference(): string
+    {
+        $reference = collect([
+            'id' => (string) $this->id(),
+            'template' => (string) $this->template()->name(),
+            'collection' => (string) $this->content->get('collection'),
+            'taxonomy' => (string) $this->content->get('taxonomy'),
+            'slug' => (string) $this->content->get('slug'),
+            'site' => (string) $this->content->get('locale'),
+        ])->filter()->implode('-');
+
+        return Str::slug($reference);
     }
 
     public function id(string $id = null): string|self
@@ -106,6 +121,17 @@ class Model
         return $this;
     }
 
+    public function replace(bool $replace = null): bool|self
+    {
+        if (is_null($replace)) {
+            return $this->config->replace();
+        }
+
+        $this->config->replace($replace);
+
+        return $this;
+    }
+
     public function layout(string $layout = null): Layout|self
     {
         if (is_null($layout)) {
@@ -162,7 +188,7 @@ class Model
             ->prepend(url('/'));
     }
 
-    public function generate(Closure $callback = null): Generator
+    public function generate(Closure $callback = null): self
     {
         $generator = $this->generator();
 
@@ -173,7 +199,7 @@ class Model
         return $generator->generate();
     }
 
-    public function dispatch(Closure $callback = null): Generator
+    public function dispatch(Closure $callback = null): self
     {
         $generator = $this->generator();
 

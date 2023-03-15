@@ -2,21 +2,47 @@
 
 namespace Aerni\Paparazzi\Concerns;
 
-use Statamic\Facades\Path;
+use Statamic\Assets\AssetCollection;
 use Statamic\Contracts\Assets\Asset;
+use Statamic\Facades\Path;
 
 trait HasAsset
 {
-    // TODO: Instead of looking for an exact path we should query the asset by likeness. This way we can add a unique ID to the assets path to get around caching issues.
-    // TODO: But maybe that's not a good idea. Better would be to replace the asset so Statamic updates all its references too.
-    public function asset(): ?Asset
+    public function assets(): AssetCollection
     {
-        return $this->container()->asset($this->path());
+        // TODO: When generating an asset without an entry, previously generated assets with an entry of the same model will be replaced.
+        // This shouldn't happen. We need a better query to filter out explicitly by reference.
+        return $this->container()->queryAssets()
+            ->where('filename', 'like', "{$this->reference()}%")
+            ->orderBy('last_modified', 'desc')
+            ->get();
     }
 
-    public function delete(): self
+    public function makeAsset(): Asset
     {
-        $this->asset()?->delete();
+        return $this->container()->makeAsset($this->path());
+    }
+
+    public function latestAsset(): ?Asset
+    {
+        return $this->assets()->first();
+    }
+
+    public function oldAssets(): AssetCollection
+    {
+        return $this->assets()->skip(1);
+    }
+
+    public function deleteOldAssets(): self
+    {
+        $this->oldAssets()->each->delete();
+
+        return $this;
+    }
+
+    public function deleteAssets(): self
+    {
+        $this->assets()->each->delete();
 
         return $this;
     }
@@ -37,11 +63,6 @@ trait HasAsset
 
     public function filename(): string
     {
-        return "{$this->assetId()}.{$this->extension()}";
-    }
-
-    public function assetId(): string
-    {
-        return "{$this->content->get('id')}_{$this->id()}";
+        return "{$this->reference()}-{$this->uid}.{$this->extension()}";
     }
 }

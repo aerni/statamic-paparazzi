@@ -2,11 +2,11 @@
 
 namespace Aerni\Paparazzi;
 
-use Closure;
-use Statamic\View\View;
-use Spatie\Browsershot\Browsershot;
-use Illuminate\Support\Facades\File;
 use Aerni\Paparazzi\Jobs\GenerateAssetJob;
+use Closure;
+use Illuminate\Support\Facades\File;
+use Spatie\Browsershot\Browsershot;
+use Statamic\View\View;
 
 class Generator
 {
@@ -43,7 +43,7 @@ class Generator
         return $this;
     }
 
-    public function generate(): self
+    public function generate(): Model
     {
         $this->ensureDirectoryExists();
 
@@ -56,23 +56,29 @@ class Generator
             $this->hydrateBrowsershot();
         }
 
+        $latestAsset = $this->model->latestAsset();
+
         $this->browsershot->save($this->model->absolutePath());
 
-        $this->model->container()
-            ->makeAsset($this->model->path())
-            ->save();
+        $asset = $this->model->makeAsset();
 
-        return $this;
+        if ($latestAsset && $this->model->replace()) {
+            $asset->replace($latestAsset, true);
+        }
+
+        $asset->save();
+
+        return $this->model;
     }
 
-    public function dispatch(): self
+    public function dispatch(): Model
     {
         $this->hydrateBrowsershot(); // Hydrate browsershot with the callbacks
         unset($this->callback); // Remove the callbacks to avoid closure serialization exception
 
         GenerateAssetJob::dispatch($this);
 
-        return $this;
+        return $this->model;
     }
 
     protected function view(): View
