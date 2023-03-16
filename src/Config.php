@@ -21,6 +21,11 @@ class Config
         $this->init($config);
     }
 
+    public function all(): array
+    {
+        return get_object_vars($this);
+    }
+
     protected function init(array $config): void
     {
         $config = array_merge([

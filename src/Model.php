@@ -32,6 +32,11 @@ class Model
         $this->uid = time();
     }
 
+    public function config(): array
+    {
+        return $this->config->all();
+    }
+
     public function id(string $id = null): string|self
     {
         if (is_null($id)) {

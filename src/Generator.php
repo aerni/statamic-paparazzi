@@ -86,7 +86,8 @@ class Generator
         return (new View)
             ->layout($this->model->layout()->view())
             ->template($this->model->template()->view())
-            ->with($this->model->content()->toArray());
+            ->with($this->model->content()->toArray())
+            ->with(['model' => $this->model->config()]);
     }
 
     protected function ensureDirectoryExists(): void
