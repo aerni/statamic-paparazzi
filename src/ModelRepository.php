@@ -13,6 +13,11 @@ class ModelRepository
         $this->models = collect(config('paparazzi.models'));
     }
 
+    public function make(string $id, array $config): Model
+    {
+        return $this->resolve($id, $config);
+    }
+
     public function all(): Collection
     {
         return $this->models
