@@ -2,6 +2,7 @@
 
 namespace Aerni\Paparazzi\Concerns;
 
+use Illuminate\Support\Str;
 use Statamic\Assets\AssetCollection;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Facades\Path;
@@ -10,12 +11,25 @@ trait HasAsset
 {
     public function assets(): AssetCollection
     {
-        // TODO: When generating an asset without an entry, previously generated assets with an entry of the same model will be replaced.
-        // This shouldn't happen. We need a better query to filter out explicitly by reference.
-        return $this->container()->queryAssets()
+        $assets = $this->container()->queryAssets()
             ->where('filename', 'like', "{$this->reference()}%")
             ->orderBy('last_modified', 'desc')
             ->get();
+
+        /**
+         * We only want to get assets that actually belong to this model.
+         * If this model's reference is `instagram-post-default`,
+         * we don't want to get assets of model with reference `instagram-post-default-pages-home-default`
+         * I couldn't make `regexp` in the query work instead of using `like`. So we have to filter here instead.
+         */
+        return $assets->filter(fn ($asset) => $this->assetBelongsToModel($asset));
+    }
+
+    protected function assetBelongsToModel(Asset $asset): bool
+    {
+        $assetReference = Str::beforeLast($asset->filename(), '-');
+
+        return Str::contains($this->reference(), $assetReference);
     }
 
     public function makeAsset(): Asset
