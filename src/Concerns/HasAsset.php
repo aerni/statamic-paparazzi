@@ -10,6 +10,8 @@ use Statamic\Contracts\Assets\Asset;
 
 trait HasAsset
 {
+    protected string $reference;
+
     public function assets(): AssetCollection
     {
         $assets = $this->container()->queryAssets()
@@ -75,5 +77,30 @@ trait HasAsset
     public function filename(): string
     {
         return "{$this->reference()}-{$this->uid}.{$this->extension()}";
+    }
+
+    public function reference(string $reference = null): string|self
+    {
+        if (is_null($reference)) {
+            return $this->reference ?? $this->defaultReference();
+        }
+
+        $this->reference = $reference;
+
+        return $this;
+    }
+
+    protected function defaultReference(): string
+    {
+        $reference = collect([
+            'id' => $this->id(),
+            'template' => $this->template()->name(),
+            'collection' => $this->content->get('collection'),
+            'taxonomy' => $this->content->get('taxonomy'),
+            'site' => Site::hasMultiple() ? $this->content->get('locale') : null,
+            'slug' => $this->content->get('slug'),
+        ])->filter()->implode('-');
+
+        return Str::slug($reference);
     }
 }

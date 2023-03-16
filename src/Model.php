@@ -32,20 +32,6 @@ class Model
         $this->uid = time();
     }
 
-    public function reference(): string
-    {
-        $reference = collect([
-            'id' => $this->id(),
-            'template' => $this->template()->name(),
-            'collection' => $this->content->get('collection'),
-            'taxonomy' => $this->content->get('taxonomy'),
-            'site' => Site::hasMultiple() ? $this->content->get('locale') : null,
-            'slug' => $this->content->get('slug'),
-        ])->filter()->implode('-');
-
-        return Str::slug($reference);
-    }
-
     public function id(string $id = null): string|self
     {
         if (is_null($id)) {
