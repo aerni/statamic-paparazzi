@@ -2,10 +2,11 @@
 
 namespace Aerni\Paparazzi\Concerns;
 
+use Statamic\Facades\Path;
+use Statamic\Facades\Site;
 use Illuminate\Support\Str;
 use Statamic\Assets\AssetCollection;
 use Statamic\Contracts\Assets\Asset;
-use Statamic\Facades\Path;
 
 trait HasAsset
 {
@@ -63,11 +64,14 @@ trait HasAsset
 
     public function path(): string
     {
-        return Path::assemble(
+        return Path::assemble([
             $this->directory(),
-            // $this->content->get('collection')?->handle(), // TODO: Make this configurable. Maybe with a {contentHandle} variable in the config?
+            $this->content->get('collection'),
+            $this->content->get('taxonomy'),
+            Site::hasMultiple() ? $this->content->get('locale') : null,
+            $this->content->get('slug'),
             $this->filename()
-        );
+        ]);
     }
 
     public function absolutePath($path = null): string

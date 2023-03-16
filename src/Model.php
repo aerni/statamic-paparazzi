@@ -2,18 +2,19 @@
 
 namespace Aerni\Paparazzi;
 
-use Aerni\Paparazzi\Concerns\HasAsset;
-use Aerni\Paparazzi\Facades\Layout as LayoutApi;
-use Aerni\Paparazzi\Facades\Paparazzi;
-use Aerni\Paparazzi\Facades\Template as TemplateApi;
 use Closure;
-use Illuminate\Support\Collection;
+use Statamic\Facades\Site;
 use Illuminate\Support\Str;
-use Statamic\Contracts\Assets\AssetContainer as Container;
-use Statamic\Contracts\Data\Augmentable;
-use Statamic\Contracts\Entries\Entry;
-use Statamic\Contracts\Taxonomies\Term;
+use Illuminate\Support\Collection;
 use Statamic\Facades\AssetContainer;
+use Statamic\Contracts\Entries\Entry;
+use Aerni\Paparazzi\Concerns\HasAsset;
+use Aerni\Paparazzi\Facades\Paparazzi;
+use Statamic\Contracts\Taxonomies\Term;
+use Statamic\Contracts\Data\Augmentable;
+use Aerni\Paparazzi\Facades\Layout as LayoutApi;
+use Aerni\Paparazzi\Facades\Template as TemplateApi;
+use Statamic\Contracts\Assets\AssetContainer as Container;
 
 class Model
 {
@@ -33,12 +34,12 @@ class Model
     public function reference(): string
     {
         $reference = collect([
-            'id' => (string) $this->id(),
-            'template' => (string) $this->template()->name(),
-            'collection' => (string) $this->content->get('collection'),
-            'taxonomy' => (string) $this->content->get('taxonomy'),
-            'slug' => (string) $this->content->get('slug'),
-            'site' => (string) $this->content->get('locale'),
+            'id' => $this->id(),
+            'template' => $this->template()->name(),
+            'collection' => $this->content->get('collection'),
+            'taxonomy' => $this->content->get('taxonomy'),
+            'site' => Site::hasMultiple() ? $this->content->get('locale') : null,
+            'slug' => $this->content->get('slug'),
         ])->filter()->implode('-');
 
         return Str::slug($reference);
