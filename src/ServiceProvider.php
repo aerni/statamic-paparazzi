@@ -8,7 +8,6 @@ use Statamic\Statamic;
 class ServiceProvider extends AddonServiceProvider
 {
     protected $commands = [
-        Commands\GenerateImage::class,
         Commands\MakeTheme::class,
     ];
 
