@@ -22,7 +22,7 @@ class MakeTemplate extends Command
     protected function publishTemplate(): void
     {
         $model = $this->argument('model') ?? $this->choice('Which model do you want to create a template for?', Model::all()->map->id()->all());
-        $template = $this->argument('name') ?? $this->ask('What do you want to name the template?', 'default');
+        $template = $this->argument('name') ?? $this->ask('What do you want to name the template?', config('paparazzi.defaults.template', 'default'));
 
         $source = __DIR__.'/../../resources/stubs/template.antlers.html';
         $directory = config('paparazzi.views')."/{$model}";

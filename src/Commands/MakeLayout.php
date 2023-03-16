@@ -20,7 +20,7 @@ class MakeLayout extends Command
 
     protected function publishLayout(): void
     {
-        $layout = $this->argument('name') ?? $this->ask('What do you want to name the layout?', 'default');
+        $layout = $this->argument('name') ?? $this->ask('What do you want to name the layout?', config('paparazzi.defaults.layout', 'default'));
 
         $source = __DIR__.'/../../resources/stubs/layout.antlers.html';
         $directory = config('paparazzi.views');
