@@ -27,7 +27,6 @@ class Config
             'extension' => config('paparazzi.defaults.extension', 'png'),
             'quality' => config('paparazzi.defaults.quality', 100),
             'container' => config('paparazzi.defaults.container', 'assets'),
-            'directory' => config('paparazzi.defaults.directory', '/'),
             'replace' => config('paparazzi.defaults.replace', true),
             'layout' => config('paparazzi.defaults.layout', 'default'),
             'template' => config('paparazzi.defaults.template', 'default'),
@@ -72,7 +71,7 @@ class Config
         }
 
         if (empty($arguments)) {
-            return $this->$name;
+            return isset($this->$name) ? $this->$name : null;
         }
 
         $this->validate([$name => $arguments[0]], true);

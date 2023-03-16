@@ -64,14 +64,7 @@ trait HasAsset
 
     public function path(): string
     {
-        return Path::assemble([
-            $this->directory(),
-            $this->content->get('collection'),
-            $this->content->get('taxonomy'),
-            Site::hasMultiple() ? $this->content->get('locale') : null,
-            $this->content->get('slug'),
-            $this->filename()
-        ]);
+        return Path::assemble($this->directory(), $this->filename());
     }
 
     public function absolutePath($path = null): string

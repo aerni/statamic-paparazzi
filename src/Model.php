@@ -3,6 +3,7 @@
 namespace Aerni\Paparazzi;
 
 use Closure;
+use Statamic\Facades\Path;
 use Statamic\Facades\Site;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
@@ -111,15 +112,27 @@ class Model
         return $this;
     }
 
-    public function directory(string $directory = null): string|self
+    public function directory(string $directory = null): string|null|self
     {
         if (is_null($directory)) {
-            return $this->config->directory();
+            return $this->config->directory() ?? $this->defaultDirectory();
         }
 
         $this->config->directory($directory);
 
         return $this;
+    }
+
+    protected function defaultDirectory(): ?string
+    {
+        $segments = array_filter([
+            $this->content->get('collection'),
+            $this->content->get('taxonomy'),
+            Site::hasMultiple() ? $this->content->get('locale') : null,
+            $this->content->get('slug'),
+        ]);
+
+        return Path::assemble($segments);
     }
 
     public function replace(bool $replace = null): bool|self
