@@ -136,7 +136,11 @@ class Model
     public function directory(string $directory = null): string|self
     {
         if (is_null($directory)) {
-            return $this->config->directory() ?? $this->defaultDirectory();
+            $directory = $this->config->directory();
+
+            return $directory === 'auto'
+                ? $this->dynamicDirectory()
+                : $directory;
         }
 
         $this->config->directory($directory);
@@ -144,7 +148,7 @@ class Model
         return $this;
     }
 
-    protected function defaultDirectory(): string
+    protected function dynamicDirectory(): string
     {
         $segments = array_filter([
             'root' => '/',

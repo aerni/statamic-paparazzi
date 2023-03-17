@@ -100,6 +100,20 @@ return [
 
         /*
         |--------------------------------------------------------------------------
+        | Directory
+        |--------------------------------------------------------------------------
+        |
+        | The default directory in the asset container where the generated images will be saved.
+        | You can set a path like `/subfolder/` or use `auto` to use the following folder structure:
+        | Single-site: "{collection}/{slug}", e.g. "/pages/about-us/".
+        | Multi-site: "{collection}/{site}/{slug}", e.g. "/pages/german/ueber-uns/".
+        |
+        */
+
+        'directory' => 'auto',
+
+        /*
+        |--------------------------------------------------------------------------
         | Replace Latest Asset
         |--------------------------------------------------------------------------
         |

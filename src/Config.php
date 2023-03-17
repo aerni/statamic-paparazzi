@@ -34,6 +34,7 @@ class Config
             'extension' => config('paparazzi.defaults.extension', 'png'),
             'quality' => config('paparazzi.defaults.quality', 100),
             'container' => config('paparazzi.defaults.container', 'assets'),
+            'directory' => config('paparazzi.defaults.directory', 'auto'),
             'replace' => config('paparazzi.defaults.replace', true),
         ], $config);
 
@@ -49,13 +50,13 @@ class Config
         $validatables = [
             'width' => 'required|integer',
             'height' => 'required|integer',
-            'layout' => 'string',
-            'template' => 'string',
-            'extension' => 'string|in:png,jpeg,pdf',
-            'quality' => 'integer',
-            'container' => 'string',
-            'directory' => 'string',
-            'replace' => 'bool',
+            'layout' => 'required|string',
+            'template' => 'required|string',
+            'extension' => 'required|string|in:png,jpeg,pdf',
+            'quality' => 'required|integer',
+            'container' => 'required|string',
+            'directory' => 'required|string',
+            'replace' => 'required|bool',
         ];
 
         /**
