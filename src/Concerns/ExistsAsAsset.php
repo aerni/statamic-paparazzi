@@ -31,9 +31,8 @@ trait ExistsAsAsset
 
     protected function assetBelongsToModel(Asset $asset): bool
     {
-        $assetReference = Str::beforeLast($asset->filename(), '-');
-
-        return Str::contains($this->reference(), $assetReference);
+        // Remove the UID from the filename to get the asset's reference.
+        return Str::beforeLast($asset->filename(), '-') === $this->reference();
     }
 
     public function makeAsset(): Asset
