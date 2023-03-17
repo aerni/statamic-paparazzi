@@ -8,13 +8,13 @@ class Config
 {
     protected int $width;
     protected int $height;
+    protected string $layout;
+    protected string $template;
     protected string $extension;
     protected int $quality;
     protected string $container;
     protected string $directory;
     protected bool $replace;
-    protected string $layout;
-    protected string $template;
 
     public function __construct(array $config)
     {
@@ -29,12 +29,12 @@ class Config
     protected function init(array $config): void
     {
         $config = array_merge([
+            'layout' => config('paparazzi.defaults.layout', 'default'),
+            'template' => config('paparazzi.defaults.template', 'default'),
             'extension' => config('paparazzi.defaults.extension', 'png'),
             'quality' => config('paparazzi.defaults.quality', 100),
             'container' => config('paparazzi.defaults.container', 'assets'),
             'replace' => config('paparazzi.defaults.replace', true),
-            'layout' => config('paparazzi.defaults.layout', 'default'),
-            'template' => config('paparazzi.defaults.template', 'default'),
         ], $config);
 
         $this->validate($config);
@@ -49,13 +49,13 @@ class Config
         $validatables = [
             'width' => 'required|integer',
             'height' => 'required|integer',
+            'layout' => 'string',
+            'template' => 'string',
             'extension' => 'string|in:png,jpeg,pdf',
             'quality' => 'integer',
             'container' => 'string',
             'directory' => 'string',
             'replace' => 'bool',
-            'layout' => 'string',
-            'template' => 'string',
         ];
 
         /**
