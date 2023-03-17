@@ -2,35 +2,19 @@
 
 namespace Aerni\Paparazzi;
 
-use SplFileInfo;
-use Statamic\Support\Str;
+use Aerni\Paparazzi\Concerns\ExistsAsFile;
 
 class Template
 {
-    public function __construct(protected SplFileInfo $file)
-    {
-        //
-    }
+    use ExistsAsFile;
 
     public function id(): string
     {
-        return "{$this->model()}::{$this->file->getBasename('.antlers.html')}";
-    }
-
-    public function name(): string
-    {
-        return Str::slugToTitle($this->file->getBasename('.antlers.html'));
+        return "{$this->model()}::{$this->handle()}";
     }
 
     public function model(): string
     {
         return $this->file->getRelativePath();
-    }
-
-    public function view(): string
-    {
-        $viewPath = Str::after($this->file->getPathname(), 'views/');
-
-        return Str::remove('.antlers.html', $viewPath);
     }
 }
