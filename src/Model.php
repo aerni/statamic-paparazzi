@@ -133,7 +133,7 @@ class Model
         return $this;
     }
 
-    public function directory(string $directory = null): string|null|self
+    public function directory(string $directory = null): string|self
     {
         if (is_null($directory)) {
             return $this->config->directory() ?? $this->defaultDirectory();
@@ -144,7 +144,7 @@ class Model
         return $this;
     }
 
-    protected function defaultDirectory(): ?string
+    protected function defaultDirectory(): string
     {
         $segments = array_filter([
             'root' => '/',
