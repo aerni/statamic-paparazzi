@@ -17,9 +17,9 @@ class Paparazzi
             : ModelApi::all();
     }
 
-    public function model(string $id): ?Model
+    public function model(string $handle): ?Model
     {
-        return ModelApi::find($id);
+        return ModelApi::find($handle);
     }
 
     public function route(): string

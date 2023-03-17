@@ -94,7 +94,7 @@ trait ExistsAsAsset
     protected function defaultReference(): string
     {
         $reference = collect([
-            'id' => $this->id(),
+            'handle' => $this->handle(),
             'template' => $this->template()->name(),
             'parent' => GetContentParent::handle($this->content()),
             'site' => Site::hasMultiple() ? $this->content()?->locale() : null,

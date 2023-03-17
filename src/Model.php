@@ -25,7 +25,7 @@ class Model
     protected Entry|Term $content;
     protected int $uid;
 
-    public function __construct(protected string $id, array $config)
+    public function __construct(protected string $handle, array $config)
     {
         $this->config = new Config($config);
         $this->uid = time();
@@ -36,18 +36,18 @@ class Model
         return $this->config->all();
     }
 
-    public function handle(): string
+    public function id(): string
     {
-        return $this->id();
+        return $this->handle();
     }
 
-    public function id(string $id = null): string|self
+    public function handle(string $handle = null): string|self
     {
-        if (is_null($id)) {
-            return $this->id;
+        if (is_null($handle)) {
+            return $this->handle;
         }
 
-        $this->id = $id;
+        $this->handle = $handle;
 
         return $this;
     }
@@ -155,7 +155,7 @@ class Model
     public function template(string $template = null): Template|self
     {
         if (is_null($template)) {
-            return TemplateApi::find("{$this->id()}::{$this->config->template()}");
+            return TemplateApi::find("{$this->handle()}::{$this->config->template()}");
         }
 
         $this->config->template($template);
@@ -176,7 +176,7 @@ class Model
 
     public function templates(): Collection
     {
-        return TemplateApi::allOfModel($this->id);
+        return TemplateApi::allOfModel($this->handle());
     }
 
     public function cpUrl(): string
@@ -192,10 +192,10 @@ class Model
     protected function routeParameters(): array
     {
         return collect([
-            'model' => $this->id(),
+            'model' => $this->handle(),
             'layout' => $this->layout()->name(),
             'template' => $this->template()->name(),
-            'contentId' => $this->content()?->id(),
+            'contentId' => $this->content()?->id(), // TODO: Should this be the slug instead?
         ])
         ->map(fn ($value) => Str::of($value)->slug('-')->toString())
         ->filter()
@@ -213,7 +213,7 @@ class Model
 
     public function name(): string
     {
-        return Str::slugToTitle($this->id());
+        return Str::slugToTitle($this->handle());
     }
 
     public function generate(Closure $callback = null): self

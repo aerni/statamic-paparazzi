@@ -31,11 +31,11 @@ class TemplateRepository
             ->firstWhere(fn ($template) => $template->id() === $id);
     }
 
-    public function allOfModel(string $id): Collection
+    public function allOfModel(string $handle): Collection
     {
         return $this->templates
             ->map(fn ($file) => $this->resolve($file))
-            ->filter(fn ($template) => $template->model() === $id)
+            ->filter(fn ($template) => $template->model() === $handle)
             ->values();
     }
 
