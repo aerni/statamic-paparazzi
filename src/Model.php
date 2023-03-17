@@ -221,7 +221,7 @@ class Model
             'model' => $this->handle(),
             'layout' => $this->layout()->name(),
             'template' => $this->template()->name(),
-            'contentId' => $this->content()?->id(), // TODO: Should this be the slug instead?
+            'contentId' => $this->content()?->id(),
         ])
         ->map(fn ($value) => Str::of($value)->slug('-')->toString())
         ->filter()
