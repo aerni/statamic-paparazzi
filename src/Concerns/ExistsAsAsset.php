@@ -2,17 +2,13 @@
 
 namespace Aerni\Paparazzi\Concerns;
 
-use Aerni\Paparazzi\Actions\GetContentParent;
 use Illuminate\Support\Str;
 use Statamic\Assets\AssetCollection;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Facades\Path;
-use Statamic\Facades\Site;
 
 trait ExistsAsAsset
 {
-    protected string $reference;
-
     public function assets(): AssetCollection
     {
         $assets = $this->container()->queryAssets()
@@ -76,30 +72,6 @@ trait ExistsAsAsset
 
     public function filename(): string
     {
-        return "{$this->reference()}-{$this->uid}.{$this->extension()}";
-    }
-
-    public function reference(string $reference = null): string|self
-    {
-        if (is_null($reference)) {
-            return $this->reference ?? $this->defaultReference();
-        }
-
-        $this->reference = $reference;
-
-        return $this;
-    }
-
-    protected function defaultReference(): string
-    {
-        $reference = collect([
-            'handle' => $this->handle(),
-            'template' => $this->template()->name(),
-            'parent' => GetContentParent::handle($this->content()),
-            'site' => Site::hasMultiple() ? $this->content()?->locale() : null,
-            'slug' => $this->content()?->slug(),
-        ])->filter()->implode('-');
-
-        return Str::slug($reference);
+        return "{$this->id()}.{$this->extension()}";
     }
 }

@@ -23,6 +23,7 @@ class Model
 
     protected Config $config;
     protected Entry|Term $content;
+    protected string $reference;
     protected int $uid;
 
     public function __construct(protected string $handle, array $config)
@@ -38,7 +39,32 @@ class Model
 
     public function id(): string
     {
-        return $this->handle();
+        return "{$this->reference()}-{$this->uid}";
+    }
+
+    public function reference(string $reference = null): string|self
+    {
+        if (is_null($reference)) {
+            return $this->reference ?? $this->defaultReference();
+        }
+
+        $this->reference = $reference;
+
+        return $this;
+    }
+
+    protected function defaultReference(): string
+    {
+        $reference = collect([
+            'handle' => $this->handle(),
+            'layout' => $this->layout()->name(),
+            'template' => $this->template()->name(),
+            'parent' => GetContentParent::handle($this->content()),
+            'site' => Site::hasMultiple() ? $this->content()?->locale() : null,
+            'slug' => $this->content()?->slug(),
+        ])->filter()->implode('-');
+
+        return Str::of($reference)->slug();
     }
 
     public function handle(string $handle = null): string|self
