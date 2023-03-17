@@ -2,25 +2,24 @@
 
 namespace Aerni\Paparazzi;
 
-use Aerni\Paparazzi\Actions\GetContentParent;
-use Aerni\Paparazzi\Concerns\HasAsset;
-use Aerni\Paparazzi\Facades\Layout as LayoutApi;
-use Aerni\Paparazzi\Facades\Paparazzi;
-use Aerni\Paparazzi\Facades\Template as TemplateApi;
 use Closure;
-use Illuminate\Support\Collection;
-use Statamic\Contracts\Assets\AssetContainer as Container;
-use Statamic\Contracts\Entries\Entry;
-use Statamic\Contracts\Taxonomies\Term;
-use Statamic\Facades\AssetContainer;
+use Statamic\View\View;
+use Statamic\Support\Str;
 use Statamic\Facades\Path;
 use Statamic\Facades\Site;
-use Statamic\Support\Str;
-use Statamic\View\View;
+use Illuminate\Support\Collection;
+use Statamic\Facades\AssetContainer;
+use Statamic\Contracts\Entries\Entry;
+use Statamic\Contracts\Taxonomies\Term;
+use Aerni\Paparazzi\Concerns\ExistsAsAsset;
+use Aerni\Paparazzi\Actions\GetContentParent;
+use Aerni\Paparazzi\Facades\Layout as LayoutApi;
+use Aerni\Paparazzi\Facades\Template as TemplateApi;
+use Statamic\Contracts\Assets\AssetContainer as Container;
 
 class Model
 {
-    use HasAsset;
+    use ExistsAsAsset;
 
     protected Config $config;
     protected Entry|Term $content;

@@ -9,7 +9,7 @@ use Statamic\Contracts\Assets\Asset;
 use Statamic\Facades\Path;
 use Statamic\Facades\Site;
 
-trait HasAsset
+trait ExistsAsAsset
 {
     protected string $reference;
 
