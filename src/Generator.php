@@ -6,7 +6,6 @@ use Aerni\Paparazzi\Jobs\GenerateAssetJob;
 use Closure;
 use Illuminate\Support\Facades\File;
 use Spatie\Browsershot\Browsershot;
-use Statamic\View\View;
 
 class Generator
 {
@@ -32,7 +31,7 @@ class Generator
             ? $this->model->quality() : null;
 
         $this->browsershot = (new Browsershot())
-            ->html($this->view()->render())
+            ->html($this->model->view()->render())
             ->windowSize($this->model->width(), $this->model->height())
             ->setScreenshotType($this->model->extension(), $quality);
 
@@ -79,15 +78,6 @@ class Generator
         GenerateAssetJob::dispatch($this);
 
         return $this->model;
-    }
-
-    protected function view(): View
-    {
-        return (new View)
-            ->layout($this->model->layout()->view())
-            ->template($this->model->template()->view())
-            ->with($this->model->content()->toArray())
-            ->with(['model' => $this->model->config()]);
     }
 
     protected function ensureDirectoryExists(): void

@@ -3,6 +3,7 @@
 namespace Aerni\Paparazzi;
 
 use Aerni\Paparazzi\Facades\Model as ModelApi;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Statamic\Facades\URL;
@@ -24,14 +25,19 @@ class Paparazzi
     public function route(): string
     {
         $baseUrl = config('paparazzi.preview_url', '/paparazzi');
-        $parameters = '/{model}/{template}/{contentId}';
+        $parameters = '/{model}/{layout}/{template}/{contentId?}';
 
         return URL::assemble($baseUrl, $parameters);
     }
 
     public function __call(string $method, array $arguments)
     {
-        return $this->model(Str::snake($method))
-            ?->content($arguments[0] ?? []);
+        $model = $this->model(Str::snake($method));
+
+        if ($model && Arr::first($arguments)) {
+            $model->content($arguments[0]);
+        }
+
+        return $model;
     }
 }

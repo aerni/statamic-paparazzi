@@ -2,11 +2,12 @@
 
 namespace Aerni\Paparazzi\Concerns;
 
-use Statamic\Facades\Path;
-use Statamic\Facades\Site;
+use Aerni\Paparazzi\Actions\GetContentParent;
 use Illuminate\Support\Str;
 use Statamic\Assets\AssetCollection;
 use Statamic\Contracts\Assets\Asset;
+use Statamic\Facades\Path;
+use Statamic\Facades\Site;
 
 trait HasAsset
 {
@@ -95,10 +96,9 @@ trait HasAsset
         $reference = collect([
             'id' => $this->id(),
             'template' => $this->template()->name(),
-            'collection' => $this->content->get('collection'),
-            'taxonomy' => $this->content->get('taxonomy'),
-            'site' => Site::hasMultiple() ? $this->content->get('locale') : null,
-            'slug' => $this->content->get('slug'),
+            'parent' => GetContentParent::handle($this->content()),
+            'site' => Site::hasMultiple() ? $this->content()?->locale() : null,
+            'slug' => $this->content()?->slug(),
         ])->filter()->implode('-');
 
         return Str::slug($reference);

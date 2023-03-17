@@ -2,39 +2,44 @@
 
 namespace Aerni\Paparazzi;
 
+use Aerni\Paparazzi\Actions\GetContentParent;
+use Aerni\Paparazzi\Concerns\HasAsset;
+use Aerni\Paparazzi\Facades\Layout as LayoutApi;
+use Aerni\Paparazzi\Facades\Paparazzi;
+use Aerni\Paparazzi\Facades\Template as TemplateApi;
 use Closure;
+use Illuminate\Support\Collection;
+use Statamic\Contracts\Assets\AssetContainer as Container;
+use Statamic\Contracts\Entries\Entry;
+use Statamic\Contracts\Taxonomies\Term;
+use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Path;
 use Statamic\Facades\Site;
-use Illuminate\Support\Str;
-use Illuminate\Support\Collection;
-use Statamic\Facades\AssetContainer;
-use Statamic\Contracts\Entries\Entry;
-use Aerni\Paparazzi\Concerns\HasAsset;
-use Aerni\Paparazzi\Facades\Paparazzi;
-use Statamic\Contracts\Taxonomies\Term;
-use Statamic\Contracts\Data\Augmentable;
-use Aerni\Paparazzi\Facades\Layout as LayoutApi;
-use Aerni\Paparazzi\Facades\Template as TemplateApi;
-use Statamic\Contracts\Assets\AssetContainer as Container;
+use Statamic\Support\Str;
+use Statamic\View\View;
 
 class Model
 {
     use HasAsset;
 
     protected Config $config;
-    protected Collection $content;
+    protected Entry|Term $content;
     protected int $uid;
 
     public function __construct(protected string $id, array $config)
     {
         $this->config = new Config($config);
-        $this->content = collect();
         $this->uid = time();
     }
 
     public function config(): array
     {
         return $this->config->all();
+    }
+
+    public function handle(): string
+    {
+        return $this->id();
     }
 
     public function id(string $id = null): string|self
@@ -117,10 +122,10 @@ class Model
     protected function defaultDirectory(): ?string
     {
         $segments = array_filter([
-            $this->content->get('collection'),
-            $this->content->get('taxonomy'),
-            Site::hasMultiple() ? $this->content->get('locale') : null,
-            $this->content->get('slug'),
+            'root' => '/',
+            'parent' => GetContentParent::handle($this->content()),
+            'site' => Site::hasMultiple() ? $this->content()?->locale() : null,
+            'slug' => $this->content()?->slug(),
         ]);
 
         return Path::assemble($segments);
@@ -140,7 +145,6 @@ class Model
     public function layout(string $layout = null): Layout|self
     {
         if (is_null($layout)) {
-            // TODO: Log exception if layout doesn't exist.
             return LayoutApi::find($this->config->layout());
         }
 
@@ -152,7 +156,6 @@ class Model
     public function template(string $template = null): Template|self
     {
         if (is_null($template)) {
-            // TODO: Log exception if template doesn't exist.
             return TemplateApi::find("{$this->id()}::{$this->config->template()}");
         }
 
@@ -161,15 +164,13 @@ class Model
         return $this;
     }
 
-    public function content(Entry|Term|Collection|array $content = null): Collection|self
+    public function content(Entry|Term $content = null): Entry|Term|null|self
     {
         if (is_null($content)) {
-            return $this->content;
+            return $this->content ?? null;
         }
 
-        $this->content = $content instanceof Augmentable
-            ? $content->toAugmentedCollection()
-            : collect($content);
+        $this->content = $content;
 
         return $this;
     }
@@ -179,18 +180,41 @@ class Model
         return TemplateApi::allOfModel($this->id);
     }
 
-    public function url(): string
+    public function cpUrl(): string
     {
-        $parameters = strtr(Paparazzi::route(), [
-            'model' => $this->id(),
-            'template' => $this->template()->id(),
-            'contentId' => $this->content()->get('id'),
-        ]);
+        return cp_route('paparazzi', $this->routeParameters());
+    }
 
-        return Str::of($parameters)
-            ->remove(['{', '}'])
-            ->replace('_', '-')
-            ->prepend(url('/'));
+    public function webUrl(): string
+    {
+        return route('paparazzi', $this->routeParameters());
+    }
+
+    protected function routeParameters(): array
+    {
+        return collect([
+            'model' => $this->id(),
+            'layout' => $this->layout()->name(),
+            'template' => $this->template()->name(),
+            'contentId' => $this->content()?->id(),
+        ])
+        ->map(fn ($value) => Str::of($value)->slug('-')->toString())
+        ->filter()
+        ->all();
+    }
+
+    public function view(): View
+    {
+        return (new View)
+            ->layout($this->layout()->view())
+            ->template($this->template()->view())
+            ->cascadeContent($this->content())
+            ->with(['model' => $this->config()]);
+    }
+
+    public function name(): string
+    {
+        return Str::slugToTitle($this->id());
     }
 
     public function generate(Closure $callback = null): self
@@ -218,5 +242,10 @@ class Model
     public function generator(): Generator
     {
         return new Generator($this);
+    }
+
+    public function __toString(): string
+    {
+        return $this->handle();
     }
 }
