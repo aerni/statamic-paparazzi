@@ -6,7 +6,7 @@ use Aerni\Paparazzi\Actions\GetModelFromRouteParameters;
 use Illuminate\Routing\Controller;
 use Statamic\View\View;
 
-class PaparazziController extends Controller
+class ModelController extends Controller
 {
     public function __invoke(): View
     {

@@ -209,9 +209,9 @@ class Model
         return TemplateApi::allOfModel($this->handle());
     }
 
-    public function cpUrl(): string
+    public function livePreviewUrl(): string
     {
-        return cp_route('paparazzi.cp', $this->routeParameters());
+        return cp_route('paparazzi.live-preview', $this->routeParameters());
     }
 
     protected function routeParameters(): array

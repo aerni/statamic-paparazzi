@@ -19,14 +19,8 @@ class GetModelFromRouteParameters
         throw_unless($layout = Layout::find($parameters['layout']), new NotFoundHttpException);
         throw_unless($template = Template::find("{$model}::{$parameters['template']}"), new NotFoundHttpException);
 
-        $model
+        return $model
             ->layout($layout)
             ->template($template);
-
-        if ($content = GetContentFromRouteParameters::handle()) {
-            $model->content($content);
-        }
-
-        return $model;
     }
 }

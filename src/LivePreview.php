@@ -26,7 +26,7 @@ class LivePreview
     {
         $targets = $this->models->map(fn ($model) => [
             'label' => $model->name(),
-            'format' => $model->cpUrl(),
+            'format' => $model->livePreviewUrl(),
         ])->all();
 
         GetContentParent::handle($content)->addPreviewTargets($targets);
