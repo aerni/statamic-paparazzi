@@ -22,10 +22,9 @@ class Paparazzi
         return ModelApi::find($handle);
     }
 
-    public function route(): string
+    public function route(string $parameters): string
     {
         $baseUrl = config('paparazzi.preview_url', '/paparazzi');
-        $parameters = '/{model}/{layout}/{template}/{contentId?}';
 
         return URL::assemble($baseUrl, $parameters);
     }

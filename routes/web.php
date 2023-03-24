@@ -5,5 +5,6 @@ use Aerni\Paparazzi\Http\Controllers\Web\PaparazziController;
 use Illuminate\Support\Facades\Route;
 
 if (app()->environment('local')) {
-    Route::get(Paparazzi::route(), [PaparazziController::class, 'show'])->name('paparazzi');
+    Route::get(Paparazzi::route('{model}/{layout}/{template}/{contentType}/{contentId}/{contentSite?}'), PaparazziController::class);
+    Route::get(Paparazzi::route('{model}/{layout}/{template}'), PaparazziController::class);
 }

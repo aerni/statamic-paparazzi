@@ -2,20 +2,20 @@
 
 namespace Aerni\Paparazzi;
 
-use Closure;
-use Statamic\View\View;
-use Statamic\Support\Str;
-use Statamic\Facades\Path;
-use Statamic\Facades\Site;
-use Illuminate\Support\Collection;
-use Statamic\Facades\AssetContainer;
-use Statamic\Contracts\Entries\Entry;
-use Statamic\Contracts\Taxonomies\Term;
-use Aerni\Paparazzi\Concerns\ExistsAsAsset;
 use Aerni\Paparazzi\Actions\GetContentParent;
+use Aerni\Paparazzi\Concerns\ExistsAsAsset;
 use Aerni\Paparazzi\Facades\Layout as LayoutApi;
 use Aerni\Paparazzi\Facades\Template as TemplateApi;
+use Closure;
+use Illuminate\Support\Collection;
 use Statamic\Contracts\Assets\AssetContainer as Container;
+use Statamic\Contracts\Entries\Entry;
+use Statamic\Contracts\Taxonomies\Term;
+use Statamic\Facades\AssetContainer;
+use Statamic\Facades\Path;
+use Statamic\Facades\Site;
+use Statamic\Support\Str;
+use Statamic\View\View;
 
 class Model
 {
@@ -211,12 +211,7 @@ class Model
 
     public function cpUrl(): string
     {
-        return cp_route('paparazzi', $this->routeParameters());
-    }
-
-    public function webUrl(): string
-    {
-        return route('paparazzi', $this->routeParameters());
+        return cp_route('paparazzi.cp', $this->routeParameters());
     }
 
     protected function routeParameters(): array
@@ -225,7 +220,9 @@ class Model
             'model' => $this->handle(),
             'layout' => $this->layout()->name(),
             'template' => $this->template()->name(),
+            'contentType' => GetContentParent::handle($this->content()),
             'contentId' => $this->content()?->id(),
+            'contentSite' => $this->content()?->locale(),
         ])
         ->map(fn ($value) => Str::of($value)->slug('-')->toString())
         ->filter()
