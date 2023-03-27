@@ -3,6 +3,7 @@
 namespace Aerni\Paparazzi;
 
 use Aerni\Paparazzi\Actions\GetContentParent;
+use Aerni\Paparazzi\Actions\GetContentType;
 use Aerni\Paparazzi\Concerns\ExistsAsAsset;
 use Aerni\Paparazzi\Facades\Layout as LayoutApi;
 use Aerni\Paparazzi\Facades\Template as TemplateApi;
@@ -136,11 +137,7 @@ class Model
     public function directory(string $directory = null): string|self
     {
         if (is_null($directory)) {
-            $directory = $this->config->directory();
-
-            return $directory === 'auto'
-                ? $this->dynamicDirectory()
-                : $directory;
+            return $this->parseDirectory($this->config->directory());
         }
 
         $this->config->directory($directory);
@@ -148,16 +145,16 @@ class Model
         return $this;
     }
 
-    protected function dynamicDirectory(): string
+    protected function parseDirectory(string $directory): string
     {
-        $segments = array_filter([
-            'root' => '/',
-            'parent' => GetContentParent::handle($this->content()),
-            'site' => Site::hasMultiple() ? $this->content()?->locale() : null,
-            'slug' => $this->content()?->slug(),
-        ]);
+        $segments = [
+            '{type}' => GetContentType::handle($this->content()),
+            '{handle}' => GetContentParent::handle($this->content())?->handle(),
+            '{site}' => Site::hasMultiple() ? $this->content()?->locale() : null,
+            '{slug}' => $this->content()?->slug(),
+        ];
 
-        return Path::assemble($segments);
+        return Path::assemble(strtr($directory, $segments));
     }
 
     public function replace(bool $replace = null): bool|self

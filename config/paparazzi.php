@@ -104,13 +104,17 @@ return [
         |--------------------------------------------------------------------------
         |
         | The default directory in the asset container where the generated images will be saved.
-        | You can set a path like `/subfolder/` or use `auto` to use the following folder structure:
-        | Single-site: "{collection}/{slug}", e.g. "/pages/about-us/".
-        | Multi-site: "{collection}/{site}/{slug}", e.g. "/pages/german/ueber-uns/".
+        | There are a couple of variables you may use to construct the directory.
+        | Keep in mind that these variables only work when passing an entry or term to a model.
+        |
+        | "{type}": Evaluates to "collections" or "taxonomies"
+        | "{handle}": The handle of the collection or taxonomy
+        | "{site}": The site of the entry or term (only returns a value for multi-sites)
+        | "{slug}": The slug of the entry or term
         |
         */
 
-        'directory' => 'auto',
+        'directory' => '{type}/{handle}/{site}/{slug}',
 
         /*
         |--------------------------------------------------------------------------
