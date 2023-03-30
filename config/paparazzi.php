@@ -108,13 +108,13 @@ return [
         | Keep in mind that these variables only work when passing an entry or term to a model.
         |
         | "{type}": Evaluates to "collections" or "taxonomies"
-        | "{handle}": The handle of the collection or taxonomy
+        | "{parent}": The handle of the collection or taxonomy
         | "{site}": The site of the entry or term (only returns a value for multi-sites)
         | "{slug}": The slug of the entry or term
         |
         */
 
-        'directory' => '{type}/{handle}/{site}/{slug}',
+        'directory' => '{type}/{parent}/{site}/{slug}',
 
         /*
         |--------------------------------------------------------------------------

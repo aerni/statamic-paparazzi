@@ -149,7 +149,7 @@ class Model
     {
         $segments = [
             '{type}' => GetContentType::handle($this->content()),
-            '{handle}' => GetContentParent::handle($this->content())?->handle(),
+            '{parent}' => GetContentParent::handle($this->content())?->handle(),
             '{site}' => Site::hasMultiple() ? $this->content()?->locale() : null,
             '{slug}' => $this->content()?->slug(),
         ];
