@@ -34,7 +34,7 @@ class Config
             'extension' => config('paparazzi.defaults.extension', 'png'),
             'quality' => config('paparazzi.defaults.quality', 100),
             'container' => config('paparazzi.defaults.container', 'assets'),
-            'directory' => config('paparazzi.defaults.directory', 'auto'),
+            'directory' => config('paparazzi.defaults.directory', '{type}/{parent}/{site}/{slug}'),
             'replace' => config('paparazzi.defaults.replace', true),
         ], $config);
 
