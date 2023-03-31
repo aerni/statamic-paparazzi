@@ -1,4 +1,4 @@
-![Statamic](https://flat.badgen.net/badge/Statamic/4.0+/FF269E) ![Packagist version](https://flat.badgen.net/packagist/v/aerni/paparazzi/latest) ![Packagist Total Downloads](https://flat.badgen.net/packagist/dt/aerni/paparazzi)
+![Statamic](https://flat.badgen.net/badge/Statamic/3.4+/FF269E) ![Packagist version](https://flat.badgen.net/packagist/v/aerni/paparazzi/latest) ![Packagist Total Downloads](https://flat.badgen.net/packagist/dt/aerni/paparazzi)
 
 # Paparazzi
 This addon provides an easy-to-use interface to generate images of your entries and terms. A common use case would be to generate social images for Open Graph and Twitter.
