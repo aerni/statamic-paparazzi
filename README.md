@@ -42,8 +42,7 @@ php please paparazzi:template
 ```
 
 ## License
-Paparazzi is **commercial software** but has an open-source codebase. If you want to use it in production, you'll need to [buy a license from the Statamic Marketplace](https://statamic.com/addons/aerni/paparazzi).
->Livewire Forms is **NOT** free software.
+Paparazzi is free to use software but may not be reused in other projects without the express written consent of Michael Aerni.
 
 ## Credits
 Developed by[ Michael Aerni](https://www.michaelaerni.ch)
