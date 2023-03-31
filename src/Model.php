@@ -24,7 +24,6 @@ class Model
 
     protected Config $config;
     protected Entry|Term $content;
-    protected string $reference;
     protected int $uid;
 
     public function __construct(protected string $handle, array $config)
@@ -41,31 +40,6 @@ class Model
     public function id(): string
     {
         return "{$this->reference()}-{$this->uid}";
-    }
-
-    public function reference(string $reference = null): string|self
-    {
-        if (is_null($reference)) {
-            return $this->reference ?? $this->defaultReference();
-        }
-
-        $this->reference = $reference;
-
-        return $this;
-    }
-
-    protected function defaultReference(): string
-    {
-        $reference = collect([
-            'handle' => $this->handle(),
-            'layout' => $this->layout()->name(),
-            'template' => $this->template()->name(),
-            'parent' => GetContentParent::handle($this->content()),
-            'site' => Site::hasMultiple() ? $this->content()?->locale() : null,
-            'slug' => $this->content()?->slug(),
-        ])->filter()->implode('-');
-
-        return Str::of($reference)->slug();
     }
 
     public function handle(string $handle = null): string|self
@@ -137,7 +111,7 @@ class Model
     public function directory(string $directory = null): string|self
     {
         if (is_null($directory)) {
-            return $this->parseDirectory($this->config->directory());
+            return $this->assembleDirectory($this->config->directory());
         }
 
         $this->config->directory($directory);
@@ -145,16 +119,42 @@ class Model
         return $this;
     }
 
-    protected function parseDirectory(string $directory): string
+    public function reference(string $reference = null): string|self
     {
-        $segments = [
+        if (is_null($reference)) {
+            return $this->assembleReference($this->config->reference());
+        }
+
+        $this->config->reference($reference);
+
+        return $this;
+    }
+
+    protected function assembleDirectory(string $directory): string
+    {
+        return Path::assemble($this->parseVariables($directory));
+    }
+
+    protected function assembleReference(string $reference): string
+    {
+        return Str::of($this->parseVariables($reference))->slug();
+    }
+
+    protected function parseVariables(string $value): string
+    {
+        $variables = collect([
+            '{model}' => $this->handle(),
+            '{layout}' => $this->layout()->handle(),
+            '{template}' => $this->template()->handle(),
             '{type}' => GetContentType::handle($this->content()),
             '{parent}' => GetContentParent::handle($this->content())?->handle(),
             '{site}' => Site::hasMultiple() ? $this->content()?->locale() : null,
             '{slug}' => $this->content()?->slug(),
-        ];
+        ])
+        ->map(fn ($value) => Str::of($value)->slug())
+        ->all();
 
-        return Path::assemble(strtr($directory, $segments));
+        return strtr($value, $variables);
     }
 
     public function replace(bool $replace = null): bool|self
@@ -208,22 +208,10 @@ class Model
 
     public function livePreviewUrl(): string
     {
-        return cp_route('paparazzi.live-preview', $this->routeParameters());
-    }
-
-    protected function routeParameters(): array
-    {
-        return collect([
-            'model' => $this->handle(),
-            'layout' => $this->layout()->name(),
-            'template' => $this->template()->name(),
-            'contentType' => GetContentParent::handle($this->content()),
-            'contentId' => $this->content()?->id(),
-            'contentSite' => $this->content()?->locale(),
-        ])
-        ->map(fn ($value) => Str::of($value)->slug('-')->toString())
-        ->filter()
-        ->all();
+        return cp_route(
+            'paparazzi.live-preview',
+            explode('/', $this->parseVariables('{model}/{layout}/{template}'))
+        );
     }
 
     public function view(): View

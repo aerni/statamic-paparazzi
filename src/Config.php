@@ -14,6 +14,7 @@ class Config
     protected int $quality;
     protected string $container;
     protected string $directory;
+    protected string $reference;
     protected bool $replace;
 
     public function __construct(array $config)
@@ -35,6 +36,7 @@ class Config
             'quality' => config('paparazzi.defaults.quality', 100),
             'container' => config('paparazzi.defaults.container', 'assets'),
             'directory' => config('paparazzi.defaults.directory', '{type}/{parent}/{site}/{slug}'),
+            'reference' => config('paparazzi.defaults.reference', '{model}-{layout}-{template}-{parent}-{site}-{slug}'),
             'replace' => config('paparazzi.defaults.replace', true),
         ], $config);
 
@@ -56,6 +58,7 @@ class Config
             'quality' => 'required|integer',
             'container' => 'required|string',
             'directory' => 'required|string',
+            'reference' => 'required|string',
             'replace' => 'required|bool',
         ];
 

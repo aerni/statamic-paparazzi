@@ -32,7 +32,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Default Settings
+    | Default Model Settings
     |--------------------------------------------------------------------------
     |
     | The default settings that will be used for all models.
@@ -103,18 +103,22 @@ return [
         | Directory
         |--------------------------------------------------------------------------
         |
-        | The default directory in the asset container where the generated images will be saved.
-        | There are a couple of variables you may use to construct the directory.
-        | Keep in mind that these variables only work when passing an entry or term to a model.
-        |
-        | "{type}": Evaluates to "collections" or "taxonomies"
-        | "{parent}": The handle of the collection or taxonomy
-        | "{site}": The site of the entry or term (only returns a value for multi-sites)
-        | "{slug}": The slug of the entry or term
+        | The default directory where the generated images will be saved.
         |
         */
 
         'directory' => '{type}/{parent}/{site}/{slug}',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Reference
+        |--------------------------------------------------------------------------
+        |
+        | The default asset reference of the generated images. This is part of the filename.
+        |
+        */
+
+        'reference' => '{model}-{layout}-{template}-{parent}-{site}-{slug}',
 
         /*
         |--------------------------------------------------------------------------
@@ -147,6 +151,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | The base URL where you'll be able to preview your templates.
+    | The preview is only available when developing and disabled for all other environments.
     |
     */
 
