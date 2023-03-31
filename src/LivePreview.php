@@ -2,17 +2,16 @@
 
 namespace Aerni\Paparazzi;
 
-use Aerni\Paparazzi\Actions\GetContentParent;
 use Aerni\Paparazzi\Facades\Paparazzi;
 use Illuminate\Support\Collection;
-use Statamic\Contracts\Entries\Entry;
-use Statamic\Contracts\Taxonomies\Term;
+use Statamic\Facades\Collection as CollectionApi;
+use Statamic\Facades\Taxonomy;
 
 class LivePreview
 {
     protected Collection $models;
 
-    public function add(string|array $models): self
+    public function addModel(string|array $models): self
     {
         $this->models = collect($models)
             ->map(function (Model|string $model) {
@@ -22,13 +21,21 @@ class LivePreview
         return $this;
     }
 
-    public function to(Entry|Term $content): void
+    public function toCollection(string|array $collections): void
     {
-        $targets = $this->models->map(fn ($model) => [
+        collect($collections)->each(fn ($collection) => CollectionApi::find($collection)?->addPreviewTargets($this->targets()));
+    }
+
+    public function toTaxonomy(string|array $taxonomies): void
+    {
+        collect($taxonomies)->each(fn ($taxonomy) => Taxonomy::find($taxonomy)?->addPreviewTargets($this->targets()));
+    }
+
+    protected function targets(): array
+    {
+        return $this->models->map(fn ($model) => [
             'label' => $model->name(),
             'format' => $model->livePreviewUrl(),
         ])->all();
-
-        GetContentParent::handle($content)->addPreviewTargets($targets);
     }
 }
