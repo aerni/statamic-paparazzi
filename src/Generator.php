@@ -82,7 +82,7 @@ class Generator
 
     protected function ensureDirectoryExists(): void
     {
-        $directory = $this->model->absolutePath(pathinfo($this->model->path(), PATHINFO_DIRNAME));
+        $directory = $this->model->absolutePath($this->model->directory());
 
         File::ensureDirectoryExists($directory);
     }
