@@ -1,6 +1,6 @@
 {
     "name": "aerni/paparazzi",
-    "description": "Generate images of your entries",
+    "description": "Generate images of your entries and terms",
     "keywords": [
         "statamic"
     ],
@@ -54,7 +54,7 @@
     "extra": {
         "statamic": {
             "name": "Paparazzi",
-            "description": "Generate images of your entries"
+            "description": "Generate images of your entries and terms"
         },
         "laravel": {
             "providers": [
