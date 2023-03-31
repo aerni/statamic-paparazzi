@@ -6,7 +6,6 @@ use Aerni\Paparazzi\Facades\Model as ModelApi;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Statamic\Facades\URL;
 
 class Paparazzi
 {
@@ -20,13 +19,6 @@ class Paparazzi
     public function model(string $handle): ?Model
     {
         return ModelApi::find($handle);
-    }
-
-    public function route(string $parameters): string
-    {
-        $baseUrl = config('paparazzi.preview_url', '/paparazzi');
-
-        return URL::assemble($baseUrl, $parameters);
     }
 
     public function __call(string $method, array $arguments)

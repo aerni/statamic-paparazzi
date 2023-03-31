@@ -1,7 +1,8 @@
 <?php
 
-use Aerni\Paparazzi\Facades\Paparazzi;
 use Aerni\Paparazzi\Http\Controllers\Web\LivePreviewController;
 use Illuminate\Support\Facades\Route;
 
-Route::get(Paparazzi::route('{model}/{layout}/{template}'), LivePreviewController::class)->name('paparazzi.live-preview');
+Route::prefix('paparazzi')->name('paparazzi.')->group(function () {
+    Route::get('{model}/{layout}/{template}', LivePreviewController::class)->name('live-preview');
+});
