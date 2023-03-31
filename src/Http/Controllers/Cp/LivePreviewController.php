@@ -1,6 +1,6 @@
 <?php
 
-namespace Aerni\Paparazzi\Http\Controllers\Web;
+namespace Aerni\Paparazzi\Http\Controllers\Cp;
 
 use Aerni\Paparazzi\Actions\GetModelFromRouteParameters;
 use Facades\Statamic\CP\LivePreview;

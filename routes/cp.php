@@ -1,6 +1,6 @@
 <?php
 
-use Aerni\Paparazzi\Http\Controllers\Web\LivePreviewController;
+use Aerni\Paparazzi\Http\Controllers\Cp\LivePreviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('paparazzi')->name('paparazzi.')->group(function () {
