@@ -33,7 +33,8 @@ class Generator
         $this->browsershot = (new Browsershot())
             ->html($this->model->view()->render())
             ->windowSize($this->model->width(), $this->model->height())
-            ->setScreenshotType($this->model->extension(), $quality);
+            ->setScreenshotType($this->model->extension(), $quality)
+            ->waitUntilNetworkIdle();
 
         if ($this->callback) {
             call_user_func($this->callback, $this->browsershot);
