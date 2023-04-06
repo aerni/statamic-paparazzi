@@ -9,11 +9,9 @@ use Illuminate\Support\Str;
 
 class Paparazzi
 {
-    public function models(): Collection
+    public function models(array $models = null): Collection
     {
-        return func_get_args()
-            ? ModelApi::select(...func_get_args())
-            : ModelApi::all();
+        return ModelApi::all($models);
     }
 
     public function model(string $handle): ?Model

@@ -18,17 +18,10 @@ class ModelRepository
         return $this->resolve($handle, $config);
     }
 
-    public function all(): Collection
+    public function all(array $models = null): Collection
     {
         return $this->models
-            ->map(fn ($model, $handle) => $this->resolve($handle, $model))
-            ->values();
-    }
-
-    public function select(): Collection
-    {
-        return $this->models
-            ->only(func_get_args())
+            ->only($models)
             ->map(fn ($model, $handle) => $this->resolve($handle, $model))
             ->values();
     }
