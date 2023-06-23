@@ -23,7 +23,9 @@ class Model
     use ExistsAsAsset;
 
     protected Config $config;
+
     protected Entry|Term $content;
+
     protected int $uid;
 
     public function __construct(protected string $handle, array $config)
@@ -151,8 +153,8 @@ class Model
             '{site}' => Site::hasMultiple() ? $this->content()?->locale() : null,
             '{slug}' => $this->content()?->slug(),
         ])
-        ->map(fn ($value) => Str::of($value)->slug())
-        ->all();
+            ->map(fn ($value) => Str::of($value)->slug())
+            ->all();
 
         return strtr($value, $variables);
     }

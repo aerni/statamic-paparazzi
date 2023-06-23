@@ -7,14 +7,23 @@ use Illuminate\Support\Facades\Validator;
 class Config
 {
     protected int $width;
+
     protected int $height;
+
     protected string $layout;
+
     protected string $template;
+
     protected string $extension;
+
     protected int $quality;
+
     protected string $container;
+
     protected string $directory;
+
     protected string $reference;
+
     protected bool $replace;
 
     public function __construct(array $config)

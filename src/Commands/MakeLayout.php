@@ -11,6 +11,7 @@ class MakeLayout extends Command
     use RunsInPlease;
 
     protected $signature = 'paparazzi:layout {name?}';
+
     protected $description = 'Create a new Paparazzi layout';
 
     public function handle(): void

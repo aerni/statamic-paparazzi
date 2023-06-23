@@ -2,11 +2,11 @@
 
 namespace Aerni\Paparazzi\Jobs;
 
-use Illuminate\Bus\Queueable;
 use Aerni\Paparazzi\Generator;
-use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
 
 class GenerateAssetJob implements ShouldQueue
 {

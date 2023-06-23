@@ -10,6 +10,7 @@ use Spatie\Browsershot\Browsershot;
 class Generator
 {
     protected Browsershot $browsershot;
+
     protected $callback;
 
     public function __construct(protected Model $model)

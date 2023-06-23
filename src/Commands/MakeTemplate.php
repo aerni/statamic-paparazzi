@@ -12,6 +12,7 @@ class MakeTemplate extends Command
     use RunsInPlease;
 
     protected $signature = 'paparazzi:template {model?} {name?}';
+
     protected $description = 'Create a new Paparazzi model template';
 
     public function handle(): void
