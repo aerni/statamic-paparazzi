@@ -5,12 +5,13 @@ namespace Aerni\Paparazzi\Commands;
 use Aerni\Paparazzi\Facades\Model;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Statamic\Console\RunsInPlease;
+
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
-use Statamic\Console\RunsInPlease;
 
 class MakeTemplate extends Command
 {
