@@ -4,6 +4,7 @@
 .env
 .phpunit.result.cache
 coverage
+composer.lock
 node_modules
 tests/__fixtures__/content/*.yaml
 tests/__fixtures__/users/*.yaml

@@ -43,10 +43,10 @@ The first thing you should do is to configure your models in `config/paparazzi.p
 
 Next, you should create your first layout and templates for your models. Use the following commands to do so:
 
-| Command                               | Description                                |
-| ------------------------------------- | ------------------------------------------ |
-| `paparazzi:layout {name?}`            | Create a new Paparazzi layout view         |
-| `paparazzi:template {model?} {name?}` | Create a new Paparazzi model template view |
+| Command              | Description                                |
+| -------------------- | ------------------------------------------ |
+| `paparazzi:layout`   | Create a new Paparazzi layout view         |
+| `paparazzi:template` | Create a new Paparazzi model template view |
 
 The views will be saved to `resources/views/paparazzi`. If you'd like to use another path, you can change it in the config.
 
