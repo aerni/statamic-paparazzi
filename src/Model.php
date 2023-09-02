@@ -26,6 +26,8 @@ class Model
 
     protected Entry|Term $content;
 
+    protected array $data = [];
+
     protected int $uid;
 
     public function __construct(protected string $handle, array $config)
@@ -203,6 +205,29 @@ class Model
         return $this;
     }
 
+    public function with(string|array $key, mixed $value = null): self
+    {
+        if (is_array($key)) {
+            $this->data = array_merge($this->data, $key);
+        } else {
+            $this->data[$key] = $value;
+        }
+
+        return $this;
+    }
+
+    public function data(): array
+    {
+        return $this->data;
+    }
+
+    public function gatherData(): array
+    {
+        return array_merge($this->data, [
+            'model' => $this->config(),
+        ]);
+    }
+
     public function templates(): Collection
     {
         return TemplateApi::allOfModel($this->handle());
@@ -222,7 +247,7 @@ class Model
             ->layout($this->layout()->view())
             ->template($this->template()->view())
             ->cascadeContent($this->content())
-            ->with(['model' => $this->config()]);
+            ->with($this->gatherData());
     }
 
     public function name(): string
