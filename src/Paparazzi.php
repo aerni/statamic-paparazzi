@@ -3,7 +3,6 @@
 namespace Aerni\Paparazzi;
 
 use Aerni\Paparazzi\Facades\Model as ModelApi;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -19,14 +18,8 @@ class Paparazzi
         return ModelApi::find($handle);
     }
 
-    public function __call(string $method, array $arguments)
+    public function __call(string $method, array $arguments): ?Model
     {
-        $model = $this->model(Str::snake($method));
-
-        if ($model && Arr::first($arguments)) {
-            $model->content($arguments[0]);
-        }
-
-        return $model;
+        return $this->model(Str::snake($method));
     }
 }

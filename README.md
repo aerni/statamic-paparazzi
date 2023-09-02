@@ -57,11 +57,11 @@ Get a single paparazzi model by handle:
 ```php
 use Aerni\Paparazzi\Facades\Paparazzi;
 
-// Get the model by handle:
-Paparazzi::model('open_graph');
-
-// Or get it using a camel case method of its handle:
+// Get a model using a camel case method of its handle:
 Paparazzi::openGraph();
+
+// Or get a model by its handle:
+Paparazzi::model('open_graph');
 ```
 
 Now you can simply call the `generate()` method on the model:
@@ -70,16 +70,16 @@ Now you can simply call the `generate()` method on the model:
 Paparazzi::openGraph()->generate();
 ```
 
-If you want to have the data of an entry or term available in the template, you can simply pass the entry or term to the method:
+Or generate the image in the background by dispatching a job:
 
 ```php
-Paparazzi::openGraph($entry)->generate();
+Paparazzi::openGraph()->dispatch();
 ```
 
-Or in the case of getting the model by handle, you can pass the entry/term using the `content()` method:
+If you want the data of an entry or term available in the template, you can add the entry/term with the `content()` method:
 
 ```php
-Paparazzi::model('open_graph')->content($entry)->generate();
+Paparazzi::openGraph()->content($entry)->generate();
 ```
 
 You can also get all the Paparazzi models at once:
@@ -100,17 +100,10 @@ Generate the images of all models with the content of an entry.
 Paparazzi::models()->each->content($entry)->generate();
 ```
 
-Generate an image in the background by dispatching a job:
-
-```php
-Paparazzi::openGraph($entry)->dispatch();
-```
-
 You can also pass a callback to the `generate` or `dispatch` method to configure the browsershot instance.
+
 ```php
-Paparazzi::twitter($entry)->generate(function ($browsershot) {
-    $browsershot->fullPage();
-});
+Paparazzi::twitter()->generate(fn ($browsershot) => $browsershot->fullPage());
 ```
 
 ## Asset management
@@ -227,4 +220,4 @@ public function handle(TermBlueprintFound $event)
 Paparazzi is free to use software but may not be reused in other projects without the express written consent of Michael Aerni.
 
 ## Credits
-Developed by[ Michael Aerni](https://www.michaelaerni.ch)
+Developed by [Michael Aerni](https://michaelaerni.ch)
