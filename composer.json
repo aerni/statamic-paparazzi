@@ -18,7 +18,7 @@
         "php": "^8.2",
         "laravel/framework": "^9.0 || ^10.0",
         "laravel/prompts": "*",
-        "spatie/browsershot": "^3.57",
+        "spatie/browsershot": "^4.0",
         "spatie/laravel-ray": "^1.32",
         "statamic/cms": "^4.0"
     },
