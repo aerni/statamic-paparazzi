@@ -18,7 +18,7 @@ class ModelRepository
         return $this->resolve($handle, $config);
     }
 
-    public function all(array $models = null): Collection
+    public function all(?array $models = null): Collection
     {
         return $this->models
             ->only($models)

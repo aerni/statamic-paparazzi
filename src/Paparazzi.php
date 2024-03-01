@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class Paparazzi
 {
-    public function models(array $models = null): Collection
+    public function models(?array $models = null): Collection
     {
         return ModelApi::all($models);
     }

@@ -6,7 +6,6 @@ use Aerni\Paparazzi\ServiceProvider;
 use Illuminate\Contracts\Config\Repository;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Statamic\Extend\Manifest;
-use Statamic\Facades\File;
 use Statamic\Providers\StatamicServiceProvider;
 
 class TestCase extends Orchestra

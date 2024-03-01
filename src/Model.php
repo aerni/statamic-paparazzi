@@ -46,7 +46,7 @@ class Model
         return "{$this->reference()}-{$this->uid}";
     }
 
-    public function handle(string $handle = null): string|self
+    public function handle(?string $handle = null): string|self
     {
         if (is_null($handle)) {
             return $this->handle;
@@ -57,7 +57,7 @@ class Model
         return $this;
     }
 
-    public function width(int $width = null): int|self
+    public function width(?int $width = null): int|self
     {
         if (is_null($width)) {
             return $this->config->width();
@@ -68,7 +68,7 @@ class Model
         return $this;
     }
 
-    public function height(int $height = null): int|self
+    public function height(?int $height = null): int|self
     {
         if (is_null($height)) {
             return $this->config->height();
@@ -79,7 +79,7 @@ class Model
         return $this;
     }
 
-    public function extension(string $extension = null): string|self
+    public function extension(?string $extension = null): string|self
     {
         if (is_null($extension)) {
             return $this->config->extension();
@@ -90,7 +90,7 @@ class Model
         return $this;
     }
 
-    public function quality(int $quality = null): int|self
+    public function quality(?int $quality = null): int|self
     {
         if (is_null($quality)) {
             return $this->config->quality();
@@ -101,7 +101,7 @@ class Model
         return $this;
     }
 
-    public function container(string $container = null): Container|self
+    public function container(?string $container = null): Container|self
     {
         if (is_null($container)) {
             return AssetContainer::find($this->config->container());
@@ -112,7 +112,7 @@ class Model
         return $this;
     }
 
-    public function directory(string $directory = null): string|self
+    public function directory(?string $directory = null): string|self
     {
         if (is_null($directory)) {
             return $this->assembleDirectory($this->config->directory());
@@ -123,7 +123,7 @@ class Model
         return $this;
     }
 
-    public function reference(string $reference = null): string|self
+    public function reference(?string $reference = null): string|self
     {
         if (is_null($reference)) {
             return $this->assembleReference($this->config->reference());
@@ -161,7 +161,7 @@ class Model
         return strtr($value, $variables);
     }
 
-    public function replace(bool $replace = null): bool|self
+    public function replace(?bool $replace = null): bool|self
     {
         if (is_null($replace)) {
             return $this->config->replace();
@@ -172,7 +172,7 @@ class Model
         return $this;
     }
 
-    public function layout(string $layout = null): Layout|self
+    public function layout(?string $layout = null): Layout|self
     {
         if (is_null($layout)) {
             return LayoutApi::find($this->config->layout());
@@ -183,7 +183,7 @@ class Model
         return $this;
     }
 
-    public function template(string $template = null): Template|self
+    public function template(?string $template = null): Template|self
     {
         if (is_null($template)) {
             return TemplateApi::find("{$this->handle()}::{$this->config->template()}");
@@ -194,7 +194,7 @@ class Model
         return $this;
     }
 
-    public function content(Entry|Term $content = null): Entry|Term|null|self
+    public function content(Entry|Term|null $content = null): Entry|Term|null|self
     {
         if (is_null($content)) {
             return $this->content ?? null;
@@ -255,7 +255,7 @@ class Model
         return Str::slugToTitle($this->handle());
     }
 
-    public function generate(Closure $callback = null): self
+    public function generate(?Closure $callback = null): self
     {
         $generator = $this->generator();
 
@@ -266,7 +266,7 @@ class Model
         return $generator->generate();
     }
 
-    public function dispatch(Closure $callback = null): self
+    public function dispatch(?Closure $callback = null): self
     {
         $generator = $this->generator();
 
