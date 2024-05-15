@@ -187,32 +187,68 @@ Use the optional `site` parameter to get the term in a different localization.
 
 ## Live Preview
 
-Add a single model to a single collection:
+Add a model to the Live Preview of all collections:
 
 ```php
 public function handle(EntryBlueprintFound $event)
 {
-    LivePreview::addModel('open_graph')
-        ->toCollection('pages');
+    Paparazzi::openGraph()->addLivePreviewToCollection();
 }
 ```
 
-Add multiple models to multiple collections:
+Add a model to the Live Preview of a specific collection:
 
 ```php
 public function handle(EntryBlueprintFound $event)
 {
-    LivePreview::addModel(['open_graph', 'twitter'])
-        ->toCollection(['pages', 'articles']);
+    Paparazzi::openGraph()->addLivePreviewToCollection('pages');
 }
 ```
 
-You can also add Live Preview to taxonomies:
+Add a model to the Live Preview of multiple selected collection:
+
+```php
+public function handle(EntryBlueprintFound $event)
+{
+    Paparazzi::openGraph()->addLivePreviewToCollection(['pages', 'articles']);
+}
+```
+
+Add a model to the Live Preview of all taxonomies:
+
+```php
+public function handle(EntryBlueprintFound $event)
+{
+    Paparazzi::openGraph()->addLivePreviewToTaxonomy();
+}
+```
+
+Add a model to the Live Preview of a specific taxonomy:
+
+```php
+public function handle(EntryBlueprintFound $event)
+{
+    Paparazzi::openGraph()->addLivePreviewToTaxonomy('categories');
+}
+```
+
+Add a model to the Live Preview of multiple selected taxonomies:
+
+```php
+public function handle(EntryBlueprintFound $event)
+{
+    Paparazzi::openGraph()->addLivePreviewToTaxonomy(['categories', 'tags']);
+}
+```
+
+You can also add a model to collections and taxonomies at the same time:
 
 ```php
 public function handle(TermBlueprintFound $event)
 {
-    LivePreview::addModel('open_graph')->toTaxonomy('tags');
+    Paparazzi::openGraph()
+        ->addLivePreviewToCollection(['pages', 'articles']);
+        ->addLivePreviewToTaxonomy('tags');
 }
 ```
 
