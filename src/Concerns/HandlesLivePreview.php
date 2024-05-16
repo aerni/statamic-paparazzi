@@ -6,6 +6,8 @@ use Statamic\Facades\Taxonomy;
 use Statamic\Facades\Collection;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
+use Statamic\Contracts\Entries\Collection as StatamicCollection;
+use Statamic\Contracts\Taxonomies\Taxonomy as StatamicTaxonomy;
 
 trait HandlesLivePreview
 {
@@ -13,11 +15,9 @@ trait HandlesLivePreview
     {
         $collections = is_null($collections)
             ? Collection::all()
-            : collect($collections)->map(fn ($collection) => Collection::find($collection));
+            : collect($collections)->map(fn ($collection) => Collection::find($collection))->filter();
 
-        $collections->filter()->each(function ($collection) {
-            Route::matched(fn() =>  $collection->addPreviewTargets([$this->livePrevieTarget()]));
-        });
+        $this->addLivePreviewTo($collections);
 
         return $this;
     }
@@ -26,28 +26,22 @@ trait HandlesLivePreview
     {
         $taxonomies = is_null($taxonomies)
             ? Taxonomy::all()
-            : collect($taxonomies)->map(fn ($taxonomy) => Taxonomy::find($taxonomy));
+            : collect($taxonomies)->map(fn ($taxonomy) => Taxonomy::find($taxonomy))->filter();
 
-        $taxonomies->filter()->each(function ($taxonomy) {
-            Route::matched(fn() =>  $taxonomy->addPreviewTargets([$this->livePrevieTarget()]));
-        });
+        $this->addLivePreviewTo($taxonomies);
 
         return $this;
     }
 
-    protected function livePrevieTarget(): array
+    protected function addLivePreviewTo(\Illuminate\Support\Collection $targets): void
     {
-        return [
-            'label' => "{$this->name()} – {$this->template()->name()}",
-            'format' => $this->livePreviewUrl(),
-        ];
-    }
-
-    protected function livePreviewUrl(): string
-    {
-        return cp_route(
-            'paparazzi.live-preview',
-            Crypt::encrypt($this)
-        );
+        Route::matched(function () use ($targets) {
+            $targets->each(function (StatamicCollection|StatamicTaxonomy $target) {
+                $target->addPreviewTargets([[
+                    'label' => "{$this->name()} – {$this->template()->name()}",
+                    'format' => cp_route('paparazzi.live-preview', Crypt::encrypt($this))
+                ]]);
+            });
+        });
     }
 }
