@@ -2,12 +2,12 @@
 
 namespace Aerni\Paparazzi\Concerns;
 
-use Statamic\Facades\Taxonomy;
-use Statamic\Facades\Collection;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
 use Statamic\Contracts\Entries\Collection as StatamicCollection;
 use Statamic\Contracts\Taxonomies\Taxonomy as StatamicTaxonomy;
+use Statamic\Facades\Collection;
+use Statamic\Facades\Taxonomy;
 
 trait HandlesLivePreview
 {
@@ -39,7 +39,7 @@ trait HandlesLivePreview
             $targets->each(function (StatamicCollection|StatamicTaxonomy $target) {
                 $target->addPreviewTargets([[
                     'label' => "{$this->name()} – {$this->template()->name()}",
-                    'format' => cp_route('paparazzi.live-preview', Crypt::encrypt($this))
+                    'format' => cp_route('paparazzi.live-preview', Crypt::encrypt($this)),
                 ]]);
             });
         });

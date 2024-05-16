@@ -2,11 +2,11 @@
 
 namespace Aerni\Paparazzi\Http\Controllers\Cp;
 
-use Statamic\View\View;
+use Facades\Statamic\CP\LivePreview;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Facades\Statamic\CP\LivePreview;
 use Illuminate\Support\Facades\Crypt;
+use Statamic\View\View;
 
 class LivePreviewController extends Controller
 {
