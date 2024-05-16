@@ -2,8 +2,9 @@
 
 namespace Aerni\Paparazzi\Concerns;
 
-use Statamic\Facades\Collection;
 use Statamic\Facades\Taxonomy;
+use Statamic\Facades\Collection;
+use Illuminate\Support\Facades\Route;
 
 trait HandlesLivePreview
 {
@@ -13,7 +14,9 @@ trait HandlesLivePreview
             ? Collection::all()
             : collect($collections)->map(fn ($collection) => Collection::find($collection));
 
-        $collections->filter()->each(fn ($collection) => $collection->addPreviewTargets([$this->livePrevieTarget()]));
+        $collections->filter()->each(function ($collection) {
+            Route::matched(fn() =>  $collection->addPreviewTargets([$this->livePrevieTarget()]));
+        });
 
         return $this;
     }
@@ -24,7 +27,9 @@ trait HandlesLivePreview
             ? Taxonomy::all()
             : collect($taxonomies)->map(fn ($taxonomy) => Taxonomy::find($taxonomy));
 
-        $taxonomies->filter()->each(fn ($taxonomy) => $taxonomy->addPreviewTargets([$this->livePrevieTarget()]));
+        $taxonomies->filter()->each(function ($taxonomy) {
+            Route::matched(fn() =>  $taxonomy->addPreviewTargets([$this->livePrevieTarget()]));
+        });
 
         return $this;
     }
