@@ -2,17 +2,22 @@
 
 namespace Aerni\Paparazzi\Http\Controllers\Cp;
 
-use Aerni\Paparazzi\Actions\GetModelFromRouteParameters;
-use Facades\Statamic\CP\LivePreview;
-use Illuminate\Routing\Controller;
 use Statamic\View\View;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Facades\Statamic\CP\LivePreview;
+use Illuminate\Support\Facades\Crypt;
 
 class LivePreviewController extends Controller
 {
-    public function __invoke(): View
+    public function __invoke(Request $request): View
     {
-        return GetModelFromRouteParameters::handle()
-            ->content(LivePreview::item(request()->statamicToken()))
-            ->view();
+        $model = Crypt::decrypt($request->modelToken);
+
+        if (! $model->content()) {
+            $model->content(LivePreview::item(request()->statamicToken()));
+        }
+
+        return $model->view();
     }
 }

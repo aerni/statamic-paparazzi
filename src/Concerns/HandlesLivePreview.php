@@ -4,6 +4,7 @@ namespace Aerni\Paparazzi\Concerns;
 
 use Statamic\Facades\Taxonomy;
 use Statamic\Facades\Collection;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
 
 trait HandlesLivePreview
@@ -46,7 +47,7 @@ trait HandlesLivePreview
     {
         return cp_route(
             'paparazzi.live-preview',
-            explode('/', $this->parseVariables('{model}/{layout}/{template}'))
+            Crypt::encrypt($this)
         );
     }
 }
