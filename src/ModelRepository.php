@@ -13,28 +13,25 @@ class ModelRepository
         $this->models = collect(config('paparazzi.models'));
     }
 
-    public function make(string $handle, array $config): Model
+    public function make(): Model
     {
-        return $this->resolve($handle, $config);
+        return new Model();
     }
 
     public function all(?array $models = null): Collection
     {
         return $this->models
             ->only($models)
-            ->map(fn ($model, $handle) => $this->resolve($handle, $model))
+            ->map(fn ($config) => $this->make()->config($config))
             ->values();
     }
 
     public function find(string $handle): ?Model
     {
-        $model = $this->models->get($handle);
+        if (! $config = $this->models->get($handle)) {
+            return null;
+        }
 
-        return $model ? $this->resolve($handle, $model) : null;
-    }
-
-    protected function resolve(string $handle, array $config): Model
-    {
-        return new Model($handle, $config);
+        return $this->make()->config($config);
     }
 }

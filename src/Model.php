@@ -5,6 +5,7 @@ namespace Aerni\Paparazzi;
 use Aerni\Paparazzi\Actions\GetContentParent;
 use Aerni\Paparazzi\Actions\GetContentType;
 use Aerni\Paparazzi\Concerns\ExistsAsAsset;
+use Aerni\Paparazzi\Concerns\HandlesConfig;
 use Aerni\Paparazzi\Concerns\HandlesLivePreview;
 use Aerni\Paparazzi\Facades\Layout as LayoutApi;
 use Aerni\Paparazzi\Facades\Template as TemplateApi;
@@ -22,9 +23,8 @@ use Statamic\View\View;
 class Model
 {
     use ExistsAsAsset;
+    use HandlesConfig;
     use HandlesLivePreview;
-
-    protected Config $config;
 
     protected Entry|Term $content;
 
@@ -32,15 +32,10 @@ class Model
 
     protected int $uid;
 
-    public function __construct(protected string $handle, array $config)
+    public function __construct()
     {
-        $this->config = new Config($config);
+        $this->config($this->defaultConfig());
         $this->uid = time();
-    }
-
-    public function config(): array
-    {
-        return $this->config->all();
     }
 
     public function id(): string
@@ -48,35 +43,35 @@ class Model
         return "{$this->reference()}-{$this->uid}";
     }
 
-    public function handle(?string $handle = null): string|self
+    public function handle(?string $handle = null): string|null|self
     {
         if (is_null($handle)) {
-            return $this->handle;
+            return $this->get('handle');
         }
 
-        $this->handle = $handle;
+        $this->set('handle', $handle);
 
         return $this;
     }
 
-    public function width(?int $width = null): int|self
+    public function width(?int $width = null): int|null|self
     {
         if (is_null($width)) {
-            return $this->config->width();
+            return $this->get('width');
         }
 
-        $this->config->width($width);
+        $this->set('width', $width);
 
         return $this;
     }
 
-    public function height(?int $height = null): int|self
+    public function height(?int $height = null): int|null|self
     {
         if (is_null($height)) {
-            return $this->config->height();
+            return $this->get('height');
         }
 
-        $this->config->height($height);
+        $this->set('height', $height);
 
         return $this;
     }
@@ -84,10 +79,10 @@ class Model
     public function extension(?string $extension = null): string|self
     {
         if (is_null($extension)) {
-            return $this->config->extension();
+            return $this->get('extension');
         }
 
-        $this->config->extension($extension);
+        $this->set('extension', $extension);
 
         return $this;
     }
@@ -95,10 +90,10 @@ class Model
     public function quality(?int $quality = null): int|self
     {
         if (is_null($quality)) {
-            return $this->config->quality();
+            return $this->get('quality');
         }
 
-        $this->config->quality($quality);
+        $this->set('quality', $quality);
 
         return $this;
     }
@@ -106,10 +101,10 @@ class Model
     public function container(?string $container = null): Container|self
     {
         if (is_null($container)) {
-            return AssetContainer::find($this->config->container());
+            return AssetContainer::find($this->get('container'));
         }
 
-        $this->config->container($container);
+        $this->set('container', $container);
 
         return $this;
     }
@@ -117,10 +112,10 @@ class Model
     public function directory(?string $directory = null): string|self
     {
         if (is_null($directory)) {
-            return $this->assembleDirectory($this->config->directory());
+            return $this->assembleDirectory($this->get('directory'));
         }
 
-        $this->config->directory($directory);
+        $this->set('directory', $directory);
 
         return $this;
     }
@@ -128,10 +123,10 @@ class Model
     public function reference(?string $reference = null): string|self
     {
         if (is_null($reference)) {
-            return $this->assembleReference($this->config->reference());
+            return $this->assembleReference($this->get('reference'));
         }
 
-        $this->config->reference($reference);
+        $this->set('reference', $reference);
 
         return $this;
     }
@@ -166,10 +161,10 @@ class Model
     public function replace(?bool $replace = null): bool|self
     {
         if (is_null($replace)) {
-            return $this->config->replace();
+            return $this->get('replace');
         }
 
-        $this->config->replace($replace);
+        $this->set('replace', $replace);
 
         return $this;
     }
@@ -177,10 +172,10 @@ class Model
     public function layout(?string $layout = null): Layout|self
     {
         if (is_null($layout)) {
-            return LayoutApi::find($this->config->layout());
+            return LayoutApi::find($this->get('layout'));
         }
 
-        $this->config->layout($layout);
+        $this->set('layout', $layout);
 
         return $this;
     }
@@ -188,10 +183,10 @@ class Model
     public function template(?string $template = null): Template|self
     {
         if (is_null($template)) {
-            return TemplateApi::find("{$this->handle()}::{$this->config->template()}");
+            return TemplateApi::find("{$this->handle()}::{$this->get('template')}");
         }
 
-        $this->config->template($template);
+        $this->set('template', $template);
 
         return $this;
     }
