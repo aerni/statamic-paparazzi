@@ -3,8 +3,8 @@
 namespace Aerni\Paparazzi\Repositories;
 
 use Aerni\Paparazzi\Model;
+use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
-use Aerni\Paparazzi\Facades\Template;
 use Aerni\Paparazzi\Stores\ModelsStore;
 
 class ModelRepository
@@ -23,18 +23,16 @@ class ModelRepository
     {
         return $this->store
             ->only($models)
-            ->flatMap(function ($model, $handle) {
-                return Template::allOfModel($handle)->map(fn ($template) => $this->make()->handle($handle)->config($model)->template($template));
-            })
+            ->map(fn ($model) => $this->make()->config($model))
             ->values();
     }
 
-    public function find(string $handle): ?Model
+    public function find(string $id): ?Model
     {
-        if (! $model = $this->store->get($handle)) {
+        if (! $model = $this->store->get($id)) {
             return null;
         }
 
-        return $this->make()->handle($handle)->config($model);
+        return $this->make()->config($model);
     }
 }
