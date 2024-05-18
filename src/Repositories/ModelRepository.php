@@ -21,18 +21,29 @@ class ModelRepository
 
     public function all(?array $models = null): Collection
     {
-        return $this->store
-            ->only($models)
-            ->map(fn ($model) => $this->make()->config($model))
-            ->values();
+        return $this->store->items()->only($models);
     }
 
     public function find(string $id): ?Model
     {
-        if (! $model = $this->store->get($id)) {
-            return null;
+        return $this->store->item($id);
+    }
+
+    public function findByHandle(string $handle): Collection
+    {
+        return $this->store->items()
+            ->filter(fn (Model $model) => $model->handle() === $handle);
+    }
+
+    public function __call(string $method, array $arguments): ?Model
+    {
+        $models = $this->findByHandle(Str::snake($method));
+
+        if (empty($arguments)) {
+            return $models->firstWhere(fn (Model $model) => $model->template()->isDefault())
+                ?? $models->first();
         }
 
-        return $this->make()->config($model);
+        return $models->firstWhere(fn (Model $model) => $model->template()->handle() === $arguments[0]);
     }
 }

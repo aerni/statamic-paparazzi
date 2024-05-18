@@ -2,7 +2,6 @@
 
 namespace Aerni\Paparazzi\Repositories;
 
-use SplFileInfo;
 use Aerni\Paparazzi\Layout;
 use Illuminate\Support\Collection;
 use Aerni\Paparazzi\Stores\LayoutsStore;
@@ -17,25 +16,16 @@ class LayoutRepository
 
     public function all(): Collection
     {
-        return $this->store
-            ->map(fn ($file) => $this->resolve($file))
-            ->values();
+        return $this->store->items();
     }
 
     public function find(string $id): ?Layout
     {
-        return $this->store
-            ->map(fn ($file) => $this->resolve($file))
-            ->firstWhere(fn ($layout) => $layout->id() === $id);
+        return $this->store->item($id);
     }
 
     public function findOrFail(string $id): Layout
     {
         return $this->find($id) ?? throw new LayoutNotFound($id);
-    }
-
-    protected function resolve(SplFileInfo $file): Layout
-    {
-        return new Layout($file);
     }
 }
