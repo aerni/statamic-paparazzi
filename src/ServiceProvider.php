@@ -2,8 +2,13 @@
 
 namespace Aerni\Paparazzi;
 
-use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
+use Aerni\Paparazzi\Config;
+use Aerni\Paparazzi\Stores\LayoutsStore;
+use Aerni\Paparazzi\Stores\ModelsStore;
+use Illuminate\Support\Facades\File;
+use Aerni\Paparazzi\Stores\TemplatesStore;
+use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -17,9 +22,37 @@ class ServiceProvider extends AddonServiceProvider
         'web' => __DIR__.'/../routes/web.php',
     ];
 
+    public function register(): void
+    {
+        $this->registerStores();
+    }
+
     public function bootAddon(): void
     {
         $this->autoPublishConfig();
+    }
+
+    protected function registerStores(): self
+    {
+        $this->app->singleton(ModelsStore::class, function ($app) {
+            return new ModelsStore(config('paparazzi.models'));
+        });
+
+        $this->app->singleton(LayoutsStore::class, function ($app) {
+            $items = collect(File::allFiles(config('paparazzi.views')))
+                ->filter(fn ($file) => empty($file->getRelativePath()));
+
+            return new LayoutsStore($items);
+        });
+
+        $this->app->singleton(TemplatesStore::class, function ($app) {
+            $items = collect(File::allFiles(config('paparazzi.views')))
+                ->filter(fn ($file) => ! empty($file->getRelativePath()));
+
+            return new TemplatesStore($items);
+        });
+
+        return $this;
     }
 
     protected function autoPublishConfig(): self

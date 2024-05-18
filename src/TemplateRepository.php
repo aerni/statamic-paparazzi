@@ -3,31 +3,27 @@
 namespace Aerni\Paparazzi;
 
 use Aerni\Paparazzi\Exceptions\TemplateNotFound;
+use Aerni\Paparazzi\Stores\TemplatesStore;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\File;
 use SplFileInfo;
 
 class TemplateRepository
 {
-    protected Collection $templates;
-
-    public function __construct()
+    public function __construct(protected TemplatesStore $store)
     {
-        $this->templates = collect(File::allFiles(config('paparazzi.views')))
-            ->filter(fn ($file) => ! empty($file->getRelativePath()))
-            ->values();
+        //
     }
 
     public function all(): Collection
     {
-        return $this->templates
+        return $this->store
             ->map(fn ($file) => $this->resolve($file))
             ->values();
     }
 
     public function find(string $id): ?Template
     {
-        return $this->templates
+        return $this->store
             ->map(fn ($file) => $this->resolve($file))
             ->firstWhere(fn ($template) => $template->id() === $id);
     }
@@ -39,7 +35,7 @@ class TemplateRepository
 
     public function allOfModel(string $handle): Collection
     {
-        return $this->templates
+        return $this->store
             ->map(fn ($file) => $this->resolve($file))
             ->filter(fn ($template) => $template->model() === $handle)
             ->values();

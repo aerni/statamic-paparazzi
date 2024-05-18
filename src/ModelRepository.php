@@ -2,15 +2,14 @@
 
 namespace Aerni\Paparazzi;
 
+use Aerni\Paparazzi\Stores\ModelsStore;
 use Illuminate\Support\Collection;
 
 class ModelRepository
 {
-    protected Collection $models;
-
-    public function __construct()
+    public function __construct(protected ModelsStore $store)
     {
-        $this->models = collect(config('paparazzi.models'));
+        //
     }
 
     public function make(): Model
@@ -20,7 +19,7 @@ class ModelRepository
 
     public function all(?array $models = null): Collection
     {
-        return $this->models
+        return $this->store
             ->only($models)
             ->map(fn ($model, $handle) => $this->make()->handle($handle)->config($model))
             ->values();
@@ -28,7 +27,7 @@ class ModelRepository
 
     public function find(string $handle): ?Model
     {
-        if (! $model = $this->models->get($handle)) {
+        if (! $model = $this->store->get($handle)) {
             return null;
         }
 

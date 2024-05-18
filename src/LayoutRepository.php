@@ -4,30 +4,26 @@ namespace Aerni\Paparazzi;
 
 use SplFileInfo;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\File;
 use Aerni\Paparazzi\Exceptions\LayoutNotFound;
+use Aerni\Paparazzi\Stores\LayoutsStore;
 
 class LayoutRepository
 {
-    protected Collection $layouts;
-
-    public function __construct()
+    public function __construct(protected LayoutsStore $store)
     {
-        $this->layouts = collect(File::allFiles(config('paparazzi.views')))
-            ->filter(fn ($file) => empty($file->getRelativePath()))
-            ->values();
+        //
     }
 
     public function all(): Collection
     {
-        return $this->layouts
+        return $this->store
             ->map(fn ($file) => $this->resolve($file))
             ->values();
     }
 
     public function find(string $id): ?Layout
     {
-        return $this->layouts
+        return $this->store
             ->map(fn ($file) => $this->resolve($file))
             ->firstWhere(fn ($layout) => $layout->id() === $id);
     }
