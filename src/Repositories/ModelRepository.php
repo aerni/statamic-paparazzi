@@ -4,6 +4,7 @@ namespace Aerni\Paparazzi\Repositories;
 
 use Aerni\Paparazzi\Model;
 use Illuminate\Support\Collection;
+use Aerni\Paparazzi\Facades\Template;
 use Aerni\Paparazzi\Stores\ModelsStore;
 
 class ModelRepository
@@ -22,7 +23,9 @@ class ModelRepository
     {
         return $this->store
             ->only($models)
-            ->map(fn ($model, $handle) => $this->make()->handle($handle)->config($model))
+            ->flatMap(function ($model, $handle) {
+                return Template::allOfModel($handle)->map(fn ($template) => $this->make()->handle($handle)->config($model)->template($template));
+            })
             ->values();
     }
 
