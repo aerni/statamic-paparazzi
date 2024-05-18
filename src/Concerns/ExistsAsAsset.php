@@ -72,6 +72,6 @@ trait ExistsAsAsset
 
     public function filename(): string
     {
-        return "{$this->id()}.{$this->extension()}";
+        return "{$this->reference()}-{$this->uid}.{$this->extension()}";
     }
 }

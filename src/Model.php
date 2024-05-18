@@ -40,7 +40,7 @@ class Model
 
     public function id(): string
     {
-        return "{$this->reference()}-{$this->uid}";
+        return "{$this->handle()}::{$this->template()}";
     }
 
     public function handle(?string $handle = null): string|self
