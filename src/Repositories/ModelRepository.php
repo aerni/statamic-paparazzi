@@ -1,9 +1,10 @@
 <?php
 
-namespace Aerni\Paparazzi;
+namespace Aerni\Paparazzi\Repositories;
 
-use Aerni\Paparazzi\Stores\ModelsStore;
+use Aerni\Paparazzi\Model;
 use Illuminate\Support\Collection;
+use Aerni\Paparazzi\Stores\ModelsStore;
 
 class ModelRepository
 {

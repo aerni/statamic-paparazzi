@@ -8,6 +8,6 @@ class Layout extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return \Aerni\Paparazzi\LayoutRepository::class;
+        return \Aerni\Paparazzi\Repositories\LayoutRepository::class;
     }
 }

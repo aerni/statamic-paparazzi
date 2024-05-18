@@ -8,6 +8,6 @@ class Template extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return \Aerni\Paparazzi\TemplateRepository::class;
+        return \Aerni\Paparazzi\Repositories\TemplateRepository::class;
     }
 }

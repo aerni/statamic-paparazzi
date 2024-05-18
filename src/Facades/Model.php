@@ -8,6 +8,6 @@ class Model extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return \Aerni\Paparazzi\ModelRepository::class;
+        return \Aerni\Paparazzi\Repositories\ModelRepository::class;
     }
 }

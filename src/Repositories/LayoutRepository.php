@@ -1,11 +1,12 @@
 <?php
 
-namespace Aerni\Paparazzi;
+namespace Aerni\Paparazzi\Repositories;
 
 use SplFileInfo;
+use Aerni\Paparazzi\Layout;
 use Illuminate\Support\Collection;
-use Aerni\Paparazzi\Exceptions\LayoutNotFound;
 use Aerni\Paparazzi\Stores\LayoutsStore;
+use Aerni\Paparazzi\Exceptions\LayoutNotFound;
 
 class LayoutRepository
 {
