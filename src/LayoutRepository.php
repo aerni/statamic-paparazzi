@@ -2,9 +2,10 @@
 
 namespace Aerni\Paparazzi;
 
+use SplFileInfo;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-use SplFileInfo;
+use Aerni\Paparazzi\Exceptions\LayoutNotFound;
 
 class LayoutRepository
 {
@@ -29,6 +30,11 @@ class LayoutRepository
         return $this->layouts
             ->map(fn ($file) => $this->resolve($file))
             ->firstWhere(fn ($layout) => $layout->id() === $id);
+    }
+
+    public function findOrFail(string $id): Layout
+    {
+        return $this->find($id) ?? throw new LayoutNotFound($id);
     }
 
     protected function resolve(SplFileInfo $file): Layout

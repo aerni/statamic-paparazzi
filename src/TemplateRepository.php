@@ -2,6 +2,7 @@
 
 namespace Aerni\Paparazzi;
 
+use Aerni\Paparazzi\Exceptions\TemplateNotFound;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use SplFileInfo;
@@ -29,6 +30,11 @@ class TemplateRepository
         return $this->templates
             ->map(fn ($file) => $this->resolve($file))
             ->firstWhere(fn ($template) => $template->id() === $id);
+    }
+
+    public function findOrFail(string $id): Template
+    {
+        return $this->find($id) ?? throw new TemplateNotFound($id);
     }
 
     public function allOfModel(string $handle): Collection

@@ -101,7 +101,7 @@ class Model
     public function container(?string $container = null): Container|self
     {
         if (is_null($container)) {
-            return AssetContainer::find($this->get('container'));
+            return AssetContainer::findOrFail($this->get('container'));
         }
 
         $this->set('container', $container);
@@ -172,7 +172,7 @@ class Model
     public function layout(?string $layout = null): Layout|self
     {
         if (is_null($layout)) {
-            return LayoutApi::find($this->get('layout'));
+            return LayoutApi::findOrFail($this->get('layout'));
         }
 
         $this->set('layout', $layout);
@@ -183,7 +183,7 @@ class Model
     public function template(?string $template = null): Template|self
     {
         if (is_null($template)) {
-            return TemplateApi::find("{$this->handle()}::{$this->get('template')}");
+            return TemplateApi::findOrFail("{$this->handle()}::{$this->get('template')}");
         }
 
         $this->set('template', $template);
