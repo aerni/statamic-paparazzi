@@ -43,7 +43,7 @@ class Model
         return "{$this->reference()}-{$this->uid}";
     }
 
-    public function handle(?string $handle = null): string|null|self
+    public function handle(?string $handle = null): string|self
     {
         if (is_null($handle)) {
             return $this->get('handle');
@@ -54,7 +54,7 @@ class Model
         return $this;
     }
 
-    public function width(?int $width = null): int|null|self
+    public function width(?int $width = null): int|self
     {
         if (is_null($width)) {
             return $this->get('width');
@@ -65,7 +65,7 @@ class Model
         return $this;
     }
 
-    public function height(?int $height = null): int|null|self
+    public function height(?int $height = null): int|self
     {
         if (is_null($height)) {
             return $this->get('height');

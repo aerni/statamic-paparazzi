@@ -2,6 +2,7 @@
 
 namespace Aerni\Paparazzi\Concerns;
 
+use Aerni\Paparazzi\Exceptions\ConfigValueNotFound;
 use Illuminate\Support\Facades\Validator;
 
 trait HandlesConfig
@@ -10,14 +11,14 @@ trait HandlesConfig
 
     public function get(string $key): mixed
     {
-        return data_get($this->config, $key);
+        return $this->config[$key] ?? throw new ConfigValueNotFound($key);
     }
 
     public function set(string $key, mixed $value): self
     {
         $this->validateOnly([$key => $value]);
 
-        data_set($this->config, $key, $value);
+        $this->config[$key] = $value;
 
         return $this;
     }
