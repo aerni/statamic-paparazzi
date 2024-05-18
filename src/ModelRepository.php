@@ -22,16 +22,16 @@ class ModelRepository
     {
         return $this->models
             ->only($models)
-            ->map(fn ($config) => $this->make()->config($config))
+            ->map(fn ($model, $handle) => $this->make()->handle($handle)->config($model))
             ->values();
     }
 
     public function find(string $handle): ?Model
     {
-        if (! $config = $this->models->get($handle)) {
+        if (! $model = $this->models->get($handle)) {
             return null;
         }
 
-        return $this->make()->config($config);
+        return $this->make()->handle($handle)->config($model);
     }
 }
