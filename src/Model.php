@@ -30,12 +30,12 @@ class Model
 
     protected array $data = [];
 
-    protected int $uid;
+    protected string $uid;
 
     public function __construct()
     {
+        $this->uid = uniqid();
         $this->config($this->defaultConfig());
-        $this->uid = time();
     }
 
     public function id(): string
