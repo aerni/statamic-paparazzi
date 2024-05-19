@@ -14,8 +14,11 @@ class ModelsStore extends Store
     {
         return collect(config('paparazzi.models'))
             ->map(fn ($config, $handle) => (new Model())->handle($handle)->config($config))
-            ->flatMap(fn (Model $model) =>
-                $model->templates()->mapWithKeys(fn (Template $template) => [$template->id() => $model])
-            );
+            ->flatMap(function (Model $model) {
+                return $model->templates()->mapWithKeys(function (Template $template) use ($model) {
+                    $model = clone $model->template($template->handle());
+                    return [$model->id() => $model];
+                });
+            });
     }
 }
