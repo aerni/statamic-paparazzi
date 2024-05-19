@@ -29,7 +29,7 @@ class ModelRepository
         return $this->store->item($id);
     }
 
-    public function findByHandle(string $handle): Collection
+    public function allOfType(string $handle): Collection
     {
         return $this->store->items()
             ->filter(fn (Model $model) => $model->handle() === $handle);
@@ -37,7 +37,7 @@ class ModelRepository
 
     public function __call(string $method, array $arguments): ?Model
     {
-        $models = $this->findByHandle(Str::snake($method));
+        $models = $this->allOfType(Str::snake($method));
 
         if (empty($arguments)) {
             return $models->firstWhere(fn (Model $model) => $model->template()->isDefault())
