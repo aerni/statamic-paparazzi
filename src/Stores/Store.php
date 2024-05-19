@@ -2,11 +2,19 @@
 
 namespace Aerni\Paparazzi\Stores;
 
+use Spatie\Blink\Blink;
 use Illuminate\Support\Collection;
 
 abstract class Store
 {
-    abstract public function items(): Collection;
+    protected string $key;
+
+    abstract protected function makeItems(): Collection;
+
+    public function items(): Collection
+    {
+        return Blink::global()->once($this->key, fn () => $this->makeItems());
+    }
 
     public function item(string $id): mixed
     {
