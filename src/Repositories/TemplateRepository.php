@@ -2,10 +2,10 @@
 
 namespace Aerni\Paparazzi\Repositories;
 
+use Aerni\Paparazzi\Exceptions\TemplateNotFound;
+use Aerni\Paparazzi\Stores\TemplatesStore;
 use Aerni\Paparazzi\Template;
 use Illuminate\Support\Collection;
-use Aerni\Paparazzi\Stores\TemplatesStore;
-use Aerni\Paparazzi\Exceptions\TemplateNotFound;
 
 class TemplateRepository
 {

@@ -2,10 +2,10 @@
 
 namespace Aerni\Paparazzi\Stores;
 
-use SplFileInfo;
 use Aerni\Paparazzi\Template;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use SplFileInfo;
 
 class TemplatesStore extends Store
 {

@@ -17,6 +17,7 @@ class ModelsStore extends Store
             ->flatMap(function (Model $model) {
                 return $model->templates()->mapWithKeys(function (Template $template) use ($model) {
                     $model = clone $model->template($template->handle());
+
                     return [$model->id() => $model];
                 });
             });

@@ -2,10 +2,10 @@
 
 namespace Aerni\Paparazzi\Repositories;
 
-use Aerni\Paparazzi\Layout;
-use Illuminate\Support\Collection;
-use Aerni\Paparazzi\Stores\LayoutsStore;
 use Aerni\Paparazzi\Exceptions\LayoutNotFound;
+use Aerni\Paparazzi\Layout;
+use Aerni\Paparazzi\Stores\LayoutsStore;
+use Illuminate\Support\Collection;
 
 class LayoutRepository
 {

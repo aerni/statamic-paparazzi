@@ -2,8 +2,8 @@
 
 namespace Aerni\Paparazzi\Stores;
 
-use Spatie\Blink\Blink;
 use Illuminate\Support\Collection;
+use Spatie\Blink\Blink;
 
 abstract class Store
 {

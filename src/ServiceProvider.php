@@ -2,8 +2,8 @@
 
 namespace Aerni\Paparazzi;
 
-use Statamic\Statamic;
 use Statamic\Providers\AddonServiceProvider;
+use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {

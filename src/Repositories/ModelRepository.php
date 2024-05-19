@@ -3,9 +3,9 @@
 namespace Aerni\Paparazzi\Repositories;
 
 use Aerni\Paparazzi\Model;
-use Illuminate\Support\Str;
-use Illuminate\Support\Collection;
 use Aerni\Paparazzi\Stores\ModelsStore;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class ModelRepository
 {
