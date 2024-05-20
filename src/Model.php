@@ -183,7 +183,10 @@ class Model
     public function template(?string $template = null): Template|self
     {
         if (is_null($template)) {
-            return TemplateApi::findOrFail("{$this->handle()}::{$this->get('template')}");
+            $template = $this->get('template');
+            $id = Str::contains($template, '::') ? $template: "{$this->handle()}::{$template}";
+
+            return TemplateApi::findOrFail($id);
         }
 
         $this->set('template', $template);
