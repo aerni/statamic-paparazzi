@@ -26,7 +26,14 @@ class ModelRepository
 
     public function find(string $id): ?Model
     {
-        return $this->store->item($id);
+        if (Str::contains($id, '::')) {
+            return $this->store->item($id);
+        }
+
+        $models = $this->allOfType($id);
+
+        return $models->firstWhere(fn (Model $model) => $model->template()->isDefault())
+            ?? $models->first();
     }
 
     public function allOfType(string $handle): Collection
@@ -37,13 +44,8 @@ class ModelRepository
 
     public function __call(string $method, array $arguments): ?Model
     {
-        $models = $this->allOfType(Str::snake($method));
-
-        if (empty($arguments)) {
-            return $models->firstWhere(fn (Model $model) => $model->template()->isDefault())
-                ?? $models->first();
-        }
-
-        return $models->firstWhere(fn (Model $model) => $model->template()->handle() === $arguments[0]);
+        return empty($arguments)
+            ? $this->find(Str::snake($method))
+            : $this->find(Str::snake($method) . '::' . $arguments[0]);
     }
 }

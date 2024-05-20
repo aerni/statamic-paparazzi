@@ -17,7 +17,6 @@ class ModelController extends Controller
 {
     public function __invoke(Request $request): View
     {
-        // TODO: Allow getting default model if no :: is present.
         throw_unless($model = Model::find($request->model), new ModelNotFound($request->model));
 
         if ($request->content) {
