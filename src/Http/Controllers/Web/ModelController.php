@@ -2,16 +2,16 @@
 
 namespace Aerni\Paparazzi\Http\Controllers\Web;
 
-use Statamic\View\View;
-use Statamic\Facades\Data;
-use Illuminate\Http\Request;
-use Aerni\Paparazzi\Facades\Model;
-use Illuminate\Routing\Controller;
 use Aerni\Paparazzi\Exceptions\ContentNotFound;
 use Aerni\Paparazzi\Exceptions\ModelNotFound;
+use Aerni\Paparazzi\Facades\Model;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Statamic\Contracts\Entries\Entry;
 use Statamic\Contracts\Taxonomies\Term;
 use Statamic\Exceptions\SiteNotFoundException;
+use Statamic\Facades\Data;
+use Statamic\View\View;
 
 class ModelController extends Controller
 {

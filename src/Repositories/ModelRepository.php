@@ -46,6 +46,6 @@ class ModelRepository
     {
         return empty($arguments)
             ? $this->find(Str::snake($method))
-            : $this->find(Str::snake($method) . '::' . $arguments[0]);
+            : $this->find(Str::snake($method).'::'.$arguments[0]);
     }
 }
