@@ -155,53 +155,39 @@ You may preview your templates in the browser according to the following URL sch
 
 ```
 // Schema
-/{preview_url}/{model}/{layout}/{template}
+/{preview_url}/{model}
 
 // Example
-/paparazzi/open-graph/default/default
+/paparazzi/open_graph
 ```
 
-Preview a template with the content of an entry:
+This will return the default template of the `open_graph` model. To show a different model, provide the full ID instead:
 
 ```
-// Schema:
-/{preview_url}/{model}/{layout}/{template}/collections/{entry}/{site?}
-
-// Example:
-/paparazzi/open-graph/default/default/collections/c3d19675-c7b8-49c5-84eb-9c5eb9713644
+/paparazzi/open_graph::article
 ```
 
-Use the optional `site` parameter to get the entry in a different localization.
+You may also change the layout that is used with the `layout` parameter:
 
 ```
-// Schema:
-/{preview_url}/{model}/{layout}/{template}/collections/{entry}/{site?}
-
-// Example:
-/paparazzi/open-graph/default/default/collections/c3d19675-c7b8-49c5-84eb-9c5eb9713644/german
+/paparazzi/open_graph::article?layout=secondary
 ```
 
-Preview a template with the content of a term:
+To add the content of an entry or term to the rendered template, add the `content` query parameter containing the entry's or term's ID.
 
 ```
-// Schema:
-/{preview_url}/{model}/{layout}/{template}/taxonomies/{taxonomy}/{term}/{site?}
+// Entry ID
+/paparazzi/open_graph::article&content=c3d19675-c7b8-49c5-84eb-9c5eb9713644
 
-// Example:
-/paparazzi/open-graph/default/default/taxonomies/tags/tag-1
+// Term ID
+/paparazzi/open_graph::article&content=cars::audi
 ```
 
-Use the optional `site` parameter to get the term in a different localization.
+Use the optional `site` parameter to get the entry or term in a specific localization.
 
 ```
-// Schema:
-/{preview_url}/{model}/{layout}/{template}/taxonomies/{taxonomy}/{term}/{site?}
-
-// Example:
-/paparazzi/open-graph/default/default/taxonomies/tags/tag-1/german
+/paparazzi/open_graph::article&content=c3d19675-c7b8-49c5-84eb-9c5eb9713644?site=german
 ```
-
-> All parameters are kebab case, e.g. model `twitter_summary` becomes `twitter-summary`.
 
 ## Live Preview
 
