@@ -184,7 +184,7 @@ class Model
     {
         if (is_null($template)) {
             $template = $this->get('template');
-            $id = Str::contains($template, '::') ? $template: "{$this->handle()}::{$template}";
+            $id = Str::contains($template, '::') ? $template : "{$this->handle()}::{$template}";
 
             return TemplateApi::findOrFail($id);
         }
